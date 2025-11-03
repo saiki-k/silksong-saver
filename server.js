@@ -99,7 +99,7 @@ app.post('/create-backup', async (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-	console.log('🚀 Silksong Saver - Simple Backup System');
+	console.log('🚀 Silksong Saver');
 	console.log(`📁 Source folder: ${config.sourceFolder}`);
 	console.log(`📁 Destination: ${config.destinationFolder}`);
 	console.log(`🌐 Server running at http://localhost:${PORT}`);
