@@ -1,6 +1,8 @@
-# 🎮 Silksong Saver
+# 🤹‍♀️ Silksong Saver · Manage Unlimited Save Backups
 
-A local Node.js server for managing **Hollow Knight: Silksong** (Steam) save backups. Access via localhost web interface (http://localhost:3000) from Steam's in-game browser or any browser.
+A simple, local Node.js server for managing **Hollow Knight: Silksong** (Steam) save backups. Access it locally (http://localhost:3000) from Steam's in-game browser or any browser.
+
+While the game provides only four save slots, this tool lets you create unlimited named backups for experimentation, testing different routes, or preserving specific moments you want to revisit.
 
 I haven't tested it, but this should work with **Hollow Knight** saves as well.
 
@@ -23,6 +25,7 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
     npm install
     ```
 3. **Configure paths and other values** in `config.js`
+    > 💡 **Steam Cloud Tip**: For Steam, consider setting your backup destination within the same folder where your save files are stored. This ensures your backups are automatically synced across devices via [Steam Cloud](https://store.steampowered.com/account/remotestorageapp/?appid=1030300).
 4. **Launch the server**: `npm start`
 5. **Open in a (Steam) browser**: `http://localhost:3000`
 
