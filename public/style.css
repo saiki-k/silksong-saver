@@ -283,3 +283,45 @@ button:hover {
 	cursor: not-allowed;
 	opacity: 0.7;
 }
+
+.footer {
+	margin-top: 40px;
+	padding: 20px 0;
+	border-top: 1px solid #555;
+	font-size: 12px;
+}
+
+.footer-links {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.footer-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	text-decoration: none;
+	color: #888888;
+	font-size: 11px;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+	color: #66bb6a;
+}
+
+.footer-icon {
+	margin-top: -2px;
+}
+
+.footer-divider {
+	color: #666666;
+	font-size: 14px;
+	margin: 0 4px;
+}
