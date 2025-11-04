@@ -92,10 +92,12 @@ function displayConfig(config) {
 			<span class="config-label">Backup Folder</span>
 			<span class="config-value">${config.destinationFolder}</span>
 		</div>
+		<!--
 		<div class="config-item">
 			<span class="config-label">Server Port</span>
 			<span class="config-value">${config.port}</span>
 		</div>
+		-->
 	`;
 }
 
@@ -156,7 +158,7 @@ function formatTimestamp(timestamp) {
 }
 
 async function restoreBackup(folderName, slot, event) {
-	const confirmMessage = `Are you sure you want to restore this backup?\n\nThis will overwrite your current Slot ${slot} save files.`;
+	const confirmMessage = `Are you sure you want to restore this backup?\n\nThis will overwrite your current Slot ${slot} save files.\n\nYou must exit and restart the game for changes to take effect.`;
 
 	if (!confirm(confirmMessage)) {
 		return;
