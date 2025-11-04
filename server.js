@@ -31,33 +31,46 @@ app.get('/backups', async (req, res) => {
 
 		const backupFolders = await fs.readdir(config.destinationFolder);
 		const backups = backupFolders
-			.filter(folder => {
+			.filter((folder) => {
 				// Filter for folders that match our backup naming pattern
 				return /^\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}_slot[1-4]_/.test(folder);
 			})
-			.map(folder => {
+			.map((folder) => {
 				const parts = folder.split('_');
 				if (parts.length >= 3) {
 					const timestamp = parts[0];
 					const slotPart = parts[1];
 					const nameParts = parts.slice(2);
-					
+
 					return {
 						folderName: folder,
 						timestamp,
 						slot: slotPart.replace('slot', ''),
-						name: nameParts.join('_')
+						name: nameParts.join('_'),
 					};
 				}
 				return null;
 			})
-			.filter(backup => backup !== null)
+			.filter((backup) => backup !== null)
 			.sort((a, b) => b.timestamp.localeCompare(a.timestamp)); // Sort by timestamp descending
 
 		res.json({ backups });
 	} catch (error) {
 		console.error('Error fetching backups:', error);
 		res.status(500).json({ error: 'Failed to fetch backups: ' + error.message });
+	}
+});
+
+app.get('/config', (req, res) => {
+	try {
+		res.json({
+			sourceFolder: config.sourceFolder,
+			destinationFolder: config.destinationFolder,
+			port: config.port || 3000,
+		});
+	} catch (error) {
+		console.error('Error fetching config:', error);
+		res.status(500).json({ error: 'Failed to fetch config: ' + error.message });
 	}
 });
 
@@ -80,6 +93,18 @@ app.post('/create-backup', async (req, res) => {
 		const timestamp = new Date().toLocaleString('sv-SE').replace(/[\/: ]/g, '-');
 		const finalBackupName = `${timestamp}_slot${saveSlot}_${sanitizedBackupName}`;
 
+		// Check if save files exist before creating backup directory
+		const userFilePattern = path.join(config.sourceFolder, `user${saveSlot}*`);
+		let userFiles;
+		try {
+			userFiles = await glob(userFilePattern.replace(/\\/g, '/'));
+			if (userFiles.length === 0) {
+				return res.status(400).json({ error: `No save files found for slot ${saveSlot}` });
+			}
+		} catch (error) {
+			return res.status(500).json({ error: `Failed to check save files: ${error.message}` });
+		}
+
 		const targetFolder = path.join(config.destinationFolder, finalBackupName);
 		await fs.ensureDir(targetFolder);
 
@@ -87,9 +112,7 @@ app.post('/create-backup', async (req, res) => {
 		const errors = [];
 
 		// Copy user save files (user{slot}*)
-		const userFilePattern = path.join(config.sourceFolder, `user${saveSlot}*`);
 		try {
-			const userFiles = await glob(userFilePattern.replace(/\\/g, '/'));
 			for (const userFile of userFiles) {
 				const fileName = path.basename(userFile);
 				const targetPath = path.join(targetFolder, fileName);
@@ -132,6 +155,108 @@ app.post('/create-backup', async (req, res) => {
 		});
 	} catch (error) {
 		console.error('Error creating backup:', error);
+		res.status(500).json({ error: 'Internal server error: ' + error.message });
+	}
+});
+
+app.post('/restore-backup', async (req, res) => {
+	try {
+		const { folderName, saveSlot } = req.body;
+
+		if (!saveSlot || !['1', '2', '3', '4'].includes(saveSlot)) {
+			return res.status(400).json({ error: 'Invalid save slot provided' });
+		}
+
+		if (!folderName || typeof folderName !== 'string') {
+			return res.status(400).json({ error: 'Invalid backup folder name provided' });
+		}
+
+		const backupPath = path.join(config.destinationFolder, folderName);
+		const backupExists = await fs.pathExists(backupPath);
+
+		if (!backupExists) {
+			return res.status(404).json({ error: 'Backup folder not found' });
+		}
+
+		const restoredFiles = [];
+		const errors = [];
+
+		const userFilePattern = path.join(backupPath, `user${saveSlot}*`);
+		const userFiles = await glob(userFilePattern.replace(/\\/g, '/'));
+
+		for (const userFile of userFiles) {
+			const fileName = path.basename(userFile);
+			const targetPath = path.join(config.sourceFolder, fileName);
+
+			try {
+				await fs.copy(userFile, targetPath);
+				restoredFiles.push(fileName);
+				console.log(`✓ Restored: ${fileName}`);
+			} catch (error) {
+				errors.push(`Failed to restore ${fileName}: ${error.message}`);
+			}
+		}
+
+		const restorePointsSource = path.join(backupPath, `Restore_Points${saveSlot}`);
+		const restorePointsTarget = path.join(config.sourceFolder, `Restore_Points${saveSlot}`);
+
+		const restorePointsExists = await fs.pathExists(restorePointsSource);
+		if (restorePointsExists) {
+			try {
+				await fs.remove(restorePointsTarget);
+				await fs.copy(restorePointsSource, restorePointsTarget);
+				restoredFiles.push(`Restore_Points${saveSlot}/`);
+				console.log(`✓ Restored: Restore_Points${saveSlot}/`);
+			} catch (error) {
+				errors.push(`Failed to restore Restore_Points${saveSlot}: ${error.message}`);
+			}
+		}
+
+		let message = `✅ Successfully restored backup to slot ${saveSlot}`;
+		if (restoredFiles.length > 0) {
+			message += `\nRestored: ${restoredFiles.join(', ')}`;
+		}
+
+		if (errors.length > 0) {
+			message += `\nWarnings: ${errors.join('; ')}`;
+		}
+
+		res.json({
+			success: true,
+			message,
+			itemsRestored: restoredFiles,
+		});
+	} catch (error) {
+		console.error('Error restoring backup:', error);
+		res.status(500).json({ error: 'Internal server error: ' + error.message });
+	}
+});
+
+app.delete('/delete-backup', async (req, res) => {
+	try {
+		const { folderName } = req.body;
+
+		if (!folderName || typeof folderName !== 'string') {
+			return res.status(400).json({ error: 'Invalid backup folder name provided' });
+		}
+
+		const backupPath = path.join(config.destinationFolder, folderName);
+		const backupExists = await fs.pathExists(backupPath);
+
+		if (!backupExists) {
+			return res.status(404).json({ error: 'Backup folder not found' });
+		}
+
+		await fs.remove(backupPath);
+		console.log(`✓ Deleted backup: ${folderName}`);
+
+		res.json({
+			success: true,
+			message: `✅ Successfully deleted backup "${folderName}"`,
+			deletedBackup: folderName,
+		});
+	} catch (error) {
+		console.error('Error deleting backup:', error);
 		res.status(500).json({ error: 'Internal server error: ' + error.message });
 	}
 });
