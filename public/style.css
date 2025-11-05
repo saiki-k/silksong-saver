@@ -325,3 +325,23 @@ button:hover {
 	font-size: 14px;
 	margin: 0 4px;
 }
+
+.container::before {
+	content: '';
+	position: absolute;
+	top: -20px;
+	right: -40px;
+	width: 200px;
+	height: 200px;
+	background-image: url('garmond_and_zaza.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	opacity: 1;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.container {
+	position: relative;
+}
