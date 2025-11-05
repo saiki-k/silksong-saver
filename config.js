@@ -20,7 +20,7 @@ const RELATIVE_BACKUP_SUBFOLDER = 'Steel Soul Saves';
 
 const config = {
 	sourceFolder: SAVE_FILES_FOLDER,
-	destinationFolder: path.join(SAVE_FILES_FOLDER, RELATIVE_BACKUP_FOLDER, RELATIVE_BACKUP_SUBFOLDER),
+	backupFolder: path.join(SAVE_FILES_FOLDER, RELATIVE_BACKUP_FOLDER, RELATIVE_BACKUP_SUBFOLDER),
 	port: 3000,
 };
 

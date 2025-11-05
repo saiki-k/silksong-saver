@@ -90,7 +90,7 @@ function displayConfig(config) {
 		</div>
 		<div class="config-item">
 			<span class="config-label">Backup Folder</span>
-			<span class="config-value">${config.destinationFolder}</span>
+			<span class="config-value">${config.backupFolder}</span>
 		</div>
 		<!--
 		<div class="config-item">

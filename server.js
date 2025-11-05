@@ -24,12 +24,12 @@ app.get('/', (req, res) => {
 
 app.get('/backups', async (req, res) => {
 	try {
-		const backupsExist = await fs.pathExists(config.destinationFolder);
+		const backupsExist = await fs.pathExists(config.backupFolder);
 		if (!backupsExist) {
 			return res.json({ backups: [] });
 		}
 
-		const backupFolders = await fs.readdir(config.destinationFolder);
+		const backupFolders = await fs.readdir(config.backupFolder);
 		const backups = backupFolders
 			.filter((folder) => {
 				// Filter for folders that match our backup naming pattern
@@ -65,8 +65,8 @@ app.get('/config', (req, res) => {
 	try {
 		res.json({
 			sourceFolder: config.sourceFolder,
-			destinationFolder: config.destinationFolder,
-			port: config.port || 3000,
+			backupFolder: config.backupFolder,
+			port: PORT,
 		});
 	} catch (error) {
 		console.error('Error fetching config:', error);
@@ -105,7 +105,7 @@ app.post('/create-backup', async (req, res) => {
 			return res.status(500).json({ error: `Failed to check save files: ${error.message}` });
 		}
 
-		const targetFolder = path.join(config.destinationFolder, finalBackupName);
+		const targetFolder = path.join(config.backupFolder, finalBackupName);
 		await fs.ensureDir(targetFolder);
 
 		const copyResults = [];
@@ -171,7 +171,7 @@ app.post('/restore-backup', async (req, res) => {
 			return res.status(400).json({ error: 'Invalid backup folder name provided' });
 		}
 
-		const backupPath = path.join(config.destinationFolder, folderName);
+		const backupPath = path.join(config.backupFolder, folderName);
 		const backupExists = await fs.pathExists(backupPath);
 
 		if (!backupExists) {
@@ -240,7 +240,7 @@ app.delete('/delete-backup', async (req, res) => {
 			return res.status(400).json({ error: 'Invalid backup folder name provided' });
 		}
 
-		const backupPath = path.join(config.destinationFolder, folderName);
+		const backupPath = path.join(config.backupFolder, folderName);
 		const backupExists = await fs.pathExists(backupPath);
 
 		if (!backupExists) {
@@ -265,6 +265,6 @@ app.delete('/delete-backup', async (req, res) => {
 app.listen(PORT, () => {
 	console.log('🚀 Silksong Saver');
 	console.log(`📁 Source folder: ${config.sourceFolder}`);
-	console.log(`📁 Destination: ${config.destinationFolder}`);
+	console.log(`📁 Backup folder: ${config.backupFolder}`);
 	console.log(`🌐 Server running at http://localhost:${PORT}`);
 });
