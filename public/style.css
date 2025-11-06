@@ -224,6 +224,12 @@ button:hover {
 	border: 1px solid rgba(255, 152, 0, 0.2);
 }
 
+.pill.restore-count {
+	background: rgba(255, 107, 53, 0.3);
+	color: #ff8a65;
+	border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
 .loading {
 	text-align: center;
 	color: #b0b0b0;

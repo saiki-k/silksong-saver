@@ -32,8 +32,7 @@ document.getElementById('backupForm').addEventListener('submit', async (e) => {
 		if (response.ok) {
 			showResult(data.message, 'success');
 			document.getElementById('backupName').value = '';
-			// Refresh the backup list after creating a new backup
-			loadBackups();
+			addNewBackupCard(data.backupCreated, data.originalName, saveSlot);
 		} else {
 			showResult(data.error || 'An error occurred', 'error');
 		}
@@ -111,7 +110,7 @@ function displayBackups(backups) {
 
 	backupsList.innerHTML = backups
 		.map((backup) => {
-			const displayName = formatBackupName(backup.name);
+			const displayName = backup.name;
 			const formattedTimestamp = formatTimestamp(backup.timestamp);
 
 			return `
@@ -122,12 +121,13 @@ function displayBackups(backups) {
 						<div class="backup-pills">
 							<span class="pill timestamp">${formattedTimestamp}</span>
 							<span class="pill slot">Slot ${backup.slot}</span>
+							${backup.restoreCount > 0 ? `<span class="pill restore-count">Restored ${backup.restoreCount}x</span>` : ''}
 						</div>
 						<div class="backup-actions">
-							<button class="restore-btn" data-folder-name="${backup.folderName}" data-slot="${backup.slot}">
+							<button class="restore-btn" data-backup-name="${backup.folderName}" data-slot="${backup.slot}">
 								Restore
 							</button>
-							<button class="delete-btn" data-folder-name="${backup.folderName}">
+							<button class="delete-btn" data-backup-name="${backup.folderName}">
 								Delete
 							</button>
 						</div>
@@ -172,16 +172,16 @@ function handleBackupButtonClick(event) {
 	const button = event.target;
 
 	if (button.classList.contains('restore-btn')) {
-		const folderName = button.getAttribute('data-folder-name');
+		const fullBackupName = button.getAttribute('data-backup-name');
 		const slot = button.getAttribute('data-slot');
-		restoreBackup(folderName, slot, event);
+		restoreBackup(fullBackupName, slot, event);
 	} else if (button.classList.contains('delete-btn')) {
-		const folderName = button.getAttribute('data-folder-name');
-		deleteBackup(folderName, event);
+		const fullBackupName = button.getAttribute('data-backup-name');
+		deleteBackup(fullBackupName, event);
 	}
 }
 
-async function restoreBackup(folderName, slot, event) {
+async function restoreBackup(fullBackupName, slot, event) {
 	const confirmMessage = `Are you sure you want to restore this backup?\n\nThis will overwrite your current Slot ${slot} save files.\n\nYou must exit and restart the game for changes to take effect.`;
 
 	if (!confirm(confirmMessage)) {
@@ -197,13 +197,14 @@ async function restoreBackup(folderName, slot, event) {
 		const response = await fetch('/restore-backup', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ folderName, saveSlot: slot }),
+			body: JSON.stringify({ folderName: fullBackupName, saveSlot: slot }),
 		});
 
 		const data = await response.json();
 
 		if (response.ok) {
 			showResult(data.message, 'success');
+			updateRestoreCount(restoreBtn);
 		} else {
 			showResult(data.error || 'Failed to restore backup', 'error');
 		}
@@ -215,7 +216,7 @@ async function restoreBackup(folderName, slot, event) {
 	}
 }
 
-async function deleteBackup(folderName, event) {
+async function deleteBackup(fullBackupName, event) {
 	const confirmMessage = `Are you sure you want to delete this backup?\n\nThis action cannot be undone.`;
 
 	if (!confirm(confirmMessage)) {
@@ -231,14 +232,14 @@ async function deleteBackup(folderName, event) {
 		const response = await fetch('/delete-backup', {
 			method: 'DELETE',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ folderName }),
+			body: JSON.stringify({ folderName: fullBackupName }),
 		});
 
 		const data = await response.json();
 
 		if (response.ok) {
 			showResult(data.message, 'success');
-			loadBackups(); // Refresh the backup list
+			removeBackupCard(deleteBtn);
 		} else {
 			showResult(data.error || 'Failed to delete backup', 'error');
 		}
@@ -248,6 +249,64 @@ async function deleteBackup(folderName, event) {
 		deleteBtn.disabled = false;
 		deleteBtn.textContent = originalText;
 	}
+}
+
+function updateRestoreCount(restoreBtn) {
+	const card = restoreBtn.closest('.backup-card');
+	const pillsContainer = card.querySelector('.backup-pills');
+	let restoreCountPill = pillsContainer.querySelector('.pill.restore-count');
+
+	if (restoreCountPill) {
+		const currentCount = parseInt(restoreCountPill.textContent.match(/\d+/)[0]);
+		restoreCountPill.textContent = `Restored ${currentCount + 1}x`;
+	} else {
+		const newPill = document.createElement('span');
+		newPill.className = 'pill restore-count';
+		newPill.textContent = 'Restored 1x';
+		pillsContainer.appendChild(newPill);
+	}
+}
+
+function removeBackupCard(deleteBtn) {
+	const card = deleteBtn.closest('.backup-card');
+	card.remove();
+}
+
+function addNewBackupCard(fullBackupName, backupName, slot) {
+	const backupsList = document.getElementById('backupsList');
+	const noBackupsDiv = backupsList.querySelector('.no-backups');
+	if (noBackupsDiv) {
+		noBackupsDiv.remove();
+	}
+
+	const displayName = backupName;
+	const timestamp = fullBackupName.split('_')[0];
+	const formattedTimestamp = formatTimestamp(timestamp);
+
+	const newCard = document.createElement('div');
+	newCard.className = 'backup-card';
+	newCard.innerHTML = `
+		<div class="backup-info">
+			<div class="backup-name">${displayName}</div>
+			<div class="backup-bottom">
+				<div class="backup-pills">
+					<span class="pill timestamp">${formattedTimestamp}</span>
+					<span class="pill slot">Slot ${slot}</span>
+				</div>
+				<div class="backup-actions">
+					<button class="restore-btn" data-backup-name="${fullBackupName}" data-slot="${slot}">
+						Restore
+					</button>
+					<button class="delete-btn" data-backup-name="${fullBackupName}">
+						Delete
+					</button>
+				</div>
+			</div>
+		</div>
+	`;
+
+	backupsList.insertBefore(newCard, backupsList.firstChild);
+	addBackupButtonListeners();
 }
 
 function showResult(message, type) {

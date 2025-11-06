@@ -15,6 +15,70 @@ try {
 
 const PORT = config.port || 3000;
 
+async function getMetaPath() {
+	return path.join(config.backupFolder, 'meta.json');
+}
+
+async function loadMeta() {
+	const metaPath = await getMetaPath();
+	try {
+		const exists = await fs.pathExists(metaPath);
+		if (!exists) {
+			return {};
+		}
+		const data = await fs.readFile(metaPath, 'utf8');
+		return JSON.parse(data);
+	} catch (error) {
+		console.error('Error loading meta.json:', error);
+		return {};
+	}
+}
+
+async function saveMeta(meta) {
+	const metaPath = await getMetaPath();
+	await fs.ensureDir(path.dirname(metaPath));
+	await fs.writeFile(metaPath, JSON.stringify(meta, null, 2));
+}
+
+async function initializeMeta() {
+	await fs.ensureDir(config.backupFolder);
+	const meta = await loadMeta();
+
+	const backupFolders = await fs.readdir(config.backupFolder).catch(() => []);
+	const existingBackups = backupFolders.filter((folder) =>
+		/^\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}_slot[1-4]_/.test(folder)
+	);
+
+	let updated = false;
+
+	for (const folder of existingBackups) {
+		if (!meta[folder]) {
+			const parts = folder.split('_');
+			const nameParts = parts.slice(2);
+			meta[folder] = {
+				originalName: nameParts.join(' ').toLowerCase(),
+				timestamp: parts[0],
+				restoreCount: 0,
+			};
+			updated = true;
+		}
+	}
+
+	const metaKeys = Object.keys(meta);
+	for (const key of metaKeys) {
+		const folderPath = path.join(config.backupFolder, key);
+		const exists = await fs.pathExists(folderPath);
+		if (!exists) {
+			delete meta[key];
+			updated = true;
+		}
+	}
+
+	if (updated) {
+		await saveMeta(meta);
+	}
+}
+
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -29,10 +93,10 @@ app.get('/backups', async (req, res) => {
 			return res.json({ backups: [] });
 		}
 
+		const meta = await loadMeta();
 		const backupFolders = await fs.readdir(config.backupFolder);
 		const backups = backupFolders
 			.filter((folder) => {
-				// Filter for folders that match our backup naming pattern
 				return /^\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}_slot[1-4]_/.test(folder);
 			})
 			.map((folder) => {
@@ -41,12 +105,17 @@ app.get('/backups', async (req, res) => {
 					const timestamp = parts[0];
 					const slotPart = parts[1];
 					const nameParts = parts.slice(2);
+					const metaInfo = meta[folder] || {
+						originalName: nameParts.join(' ').toLowerCase(),
+						restoreCount: 0,
+					};
 
 					return {
 						folderName: folder,
 						timestamp,
 						slot: slotPart.replace('slot', ''),
-						name: nameParts.join('_'),
+						name: metaInfo.originalName,
+						restoreCount: metaInfo.restoreCount,
 					};
 				}
 				return null;
@@ -147,10 +216,19 @@ app.post('/create-backup', async (req, res) => {
 			message += `\nWarnings: ${errors.join('; ')}`;
 		}
 
+		const meta = await loadMeta();
+		meta[finalBackupName] = {
+			originalName: backupName.trim(),
+			timestamp,
+			restoreCount: 0,
+		};
+		await saveMeta(meta);
+
 		res.json({
 			success: true,
 			message,
 			backupCreated: finalBackupName,
+			originalName: backupName.trim(),
 			itemsCopied: copyResults,
 		});
 	} catch (error) {
@@ -221,6 +299,12 @@ app.post('/restore-backup', async (req, res) => {
 			message += `\nWarnings: ${errors.join('; ')}`;
 		}
 
+		const meta = await loadMeta();
+		if (meta[folderName]) {
+			meta[folderName].restoreCount = (meta[folderName].restoreCount ?? 0) + 1;
+			await saveMeta(meta);
+		}
+
 		res.json({
 			success: true,
 			message,
@@ -250,6 +334,12 @@ app.delete('/delete-backup', async (req, res) => {
 		await fs.remove(backupPath);
 		console.log(`✓ Deleted backup: ${folderName}`);
 
+		const meta = await loadMeta();
+		if (meta[folderName]) {
+			delete meta[folderName];
+			await saveMeta(meta);
+		}
+
 		res.json({
 			success: true,
 			message: `✅ Successfully deleted backup "${folderName}"`,
@@ -262,7 +352,9 @@ app.delete('/delete-backup', async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+	await initializeMeta();
+
 	console.log('🚀 Silksong Saver');
 	console.log(`📁 Source folder: ${config.sourceFolder}`);
 	console.log(`📁 Backup folder: ${config.backupFolder}`);
