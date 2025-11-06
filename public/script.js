@@ -124,10 +124,10 @@ function displayBackups(backups) {
 							<span class="pill slot">Slot ${backup.slot}</span>
 						</div>
 						<div class="backup-actions">
-							<button class="restore-btn" onclick="restoreBackup('${backup.folderName}', '${backup.slot}', event)">
+							<button class="restore-btn" data-folder-name="${backup.folderName}" data-slot="${backup.slot}">
 								Restore
 							</button>
-							<button class="delete-btn" onclick="deleteBackup('${backup.folderName}', event)">
+							<button class="delete-btn" data-folder-name="${backup.folderName}">
 								Delete
 							</button>
 						</div>
@@ -137,6 +137,8 @@ function displayBackups(backups) {
 		`;
 		})
 		.join('');
+
+	addBackupButtonListeners();
 }
 
 function formatBackupName(name) {
@@ -155,6 +157,28 @@ function formatTimestamp(timestamp) {
 		return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 	}
 	return timestamp;
+}
+
+function addBackupButtonListeners() {
+	const backupsList = document.getElementById('backupsList');
+
+	// Remove existing listeners to avoid duplicates
+	backupsList.removeEventListener('click', handleBackupButtonClick);
+
+	backupsList.addEventListener('click', handleBackupButtonClick);
+}
+
+function handleBackupButtonClick(event) {
+	const button = event.target;
+
+	if (button.classList.contains('restore-btn')) {
+		const folderName = button.getAttribute('data-folder-name');
+		const slot = button.getAttribute('data-slot');
+		restoreBackup(folderName, slot, event);
+	} else if (button.classList.contains('delete-btn')) {
+		const folderName = button.getAttribute('data-folder-name');
+		deleteBackup(folderName, event);
+	}
 }
 
 async function restoreBackup(folderName, slot, event) {
