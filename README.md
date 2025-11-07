@@ -24,9 +24,9 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
     cd silksong-saver
     npm install
     ```
-3. **Update STEAM_ID** in `config.js` (optionally, you can also update `backupFolder` to change the backup destination folder)
+3. **Update STEAM_ID** in `config.js` with your Steam User ID (which you can find [here](https://steamcommunity.com/my/friends/add), as "your friend code")
 
-    > 💡 **Steam Cloud Sync**: For Steam, consider setting your backup destination within the same folder where your save files are stored. This is the default configuration, so if this sounds good to you, no changes are needed! This ensures your backups are automatically synced across devices via [Steam Cloud](https://store.steampowered.com/account/remotestorageapp/?appid=1030300).
+    > 💡 **Steam Cloud Sync**: For Steam, consider setting your backup destination within the same folder where your save files are stored. This ensures your backups are automatically synced across devices via [Steam Cloud](https://store.steampowered.com/account/remotestorageapp/?appid=1030300). This is the default configuration, so if this sounds good to you, no changes are needed! Otherwise, you can update the `backupFolder` value in `config.js` to change the backup destination folder.
     >
     > ⚠️ **Steam Cloud Sync Warning**: When using Steam Cloud, always perform backup operations (rename/delete) while the game is running. If you modify backups while the game is closed, Steam may detect "missing" files and may resync these stale files when the game launches.
 
@@ -39,4 +39,4 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
 -   Access via Steam's in-game web browser (Shift+Tab → Web Browser), or any web browser at `http://localhost:3000`
 -   Create backups as needed during gameplay, after sitting at a bench
 -   **Restore a backup**: Select a backup and restore it (replaces the current save file)
-    -   ⚠️ After restoring a backup, you must exit and restart the game for changes to take effect
+    -   📝 After restoring a backup, you must exit and restart the game for changes to take effect
