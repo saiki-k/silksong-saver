@@ -1,10 +1,10 @@
 const express = require('express');
 const path = require('path');
 
-const MetaService = require('./services/meta');
-const BackupService = require('./services/backup');
-const createBackupRouter = require('./routes/backup');
-const createGeneralRouter = require('./routes/general');
+const MetaService = require('./services/metaService');
+const BackupOpsService = require('./services/backupOpsService');
+const createBackupRouter = require('./routers/backupOpsRouter');
+const createGeneralRouter = require('./routers/generalRouter');
 const { errorHandler } = require('./middleware/middleware');
 
 let config;
@@ -19,12 +19,12 @@ const PORT = config.port || 3000;
 const app = express();
 
 const metaService = new MetaService(config);
-const backupService = new BackupService(config, metaService);
+const backupOpsService = new BackupOpsService(config, metaService);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../client')));
 app.use('/', createGeneralRouter(config, PORT));
-app.use('/', createBackupRouter(backupService));
+app.use('/', createBackupRouter(backupOpsService));
 app.use(errorHandler);
 
 async function startServer() {
@@ -43,14 +43,12 @@ async function startServer() {
 	}
 }
 
-process.on('SIGINT', () => {
+const shutDown = () => {
 	console.log('\n🛑 Shutting down server...');
 	process.exit(0);
-});
+};
 
-process.on('SIGTERM', () => {
-	console.log('\n🛑 Shutting down server...');
-	process.exit(0);
-});
+process.on('SIGINT', shutDown);
+process.on('SIGTERM', shutDown);
 
 startServer();

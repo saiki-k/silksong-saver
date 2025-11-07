@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 /**
- * @param {BackupService} backupService - Backup service instance
+ * @param {BackupOpsService} backupOpsService - Backup service instance
  * @returns {Router} Express router with backup routes
  */
-function createBackupRouter(backupService) {
+function createBackupRouter(backupOpsService) {
 	router.get('/backups', async (req, res) => {
 		try {
-			const backups = await backupService.getBackups();
+			const backups = await backupOpsService.getBackups();
 			res.json({ backups });
 		} catch (error) {
 			console.error('Error fetching backups:', error);
@@ -19,7 +19,7 @@ function createBackupRouter(backupService) {
 	router.post('/create-backup', async (req, res) => {
 		try {
 			const { backupName, saveSlot } = req.body;
-			const result = await backupService.createBackup(backupName, saveSlot);
+			const result = await backupOpsService.createBackup(backupName, saveSlot);
 			res.json(result);
 		} catch (error) {
 			console.error('Error creating backup:', error);
@@ -42,7 +42,7 @@ function createBackupRouter(backupService) {
 	router.post('/restore-backup', async (req, res) => {
 		try {
 			const { folderName, saveSlot } = req.body;
-			const result = await backupService.restoreBackup(folderName, saveSlot);
+			const result = await backupOpsService.restoreBackup(folderName, saveSlot);
 			res.json(result);
 		} catch (error) {
 			console.error('Error restoring backup:', error);
@@ -67,11 +67,11 @@ function createBackupRouter(backupService) {
 	router.put('/rename-backup', async (req, res) => {
 		try {
 			const { folderName, newName } = req.body;
-			const result = await backupService.renameBackup(folderName, newName);
+			const result = await backupOpsService.renameBackup(folderName, newName);
 			res.json(result);
 		} catch (error) {
 			console.error('Error renaming backup:', error);
-			
+
 			let statusCode = 500;
 			switch (true) {
 				case error.message === 'Invalid backup folder name provided':
@@ -84,7 +84,7 @@ function createBackupRouter(backupService) {
 				default:
 					statusCode = 500;
 			}
-			
+
 			res.status(statusCode).json({ error: error.message });
 		}
 	});
@@ -92,7 +92,7 @@ function createBackupRouter(backupService) {
 	router.delete('/delete-backup', async (req, res) => {
 		try {
 			const { folderName } = req.body;
-			const result = await backupService.deleteBackup(folderName);
+			const result = await backupOpsService.deleteBackup(folderName);
 			res.json(result);
 		} catch (error) {
 			console.error('Error deleting backup:', error);

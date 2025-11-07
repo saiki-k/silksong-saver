@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const { glob } = require('glob');
 
-class BackupService {
+class BackupOpsService {
 	constructor(config, metaService) {
 		this.config = config;
 		this.metaService = metaService;
@@ -352,4 +352,4 @@ class BackupService {
 	}
 }
 
-module.exports = BackupService;
+module.exports = BackupOpsService;
