@@ -24,9 +24,9 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
     cd silksong-saver
     npm install
     ```
-3. **Configure paths and other values** in `config.js`
+3. **Update STEAM_ID** in `config.js` (optionally, you can also update `backupFolder` to change the backup destination folder)
 
-    > 💡 **Steam Cloud Sync**: For Steam, consider setting your backup destination within the same folder where your save files are stored. This ensures your backups are automatically synced across devices via [Steam Cloud](https://store.steampowered.com/account/remotestorageapp/?appid=1030300).
+    > 💡 **Steam Cloud Sync**: For Steam, consider setting your backup destination within the same folder where your save files are stored. This is the default configuration, so if this sounds good to you, no changes are needed! This ensures your backups are automatically synced across devices via [Steam Cloud](https://store.steampowered.com/account/remotestorageapp/?appid=1030300).
     >
     > ⚠️ **Steam Cloud Sync Warning**: When using Steam Cloud, always perform backup operations (rename/delete) while the game is running. If you modify backups while the game is closed, Steam may detect "missing" files and may resync these stale files when the game launches.
 

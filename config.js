@@ -1,9 +1,25 @@
 import path from 'path';
+import os from 'os';
 
-const USER_NAME = 'saiki';
 const STEAM_ID = '115888760';
 
-const SAVE_FILES_FOLDER = `C:\\Users\\${USER_NAME}\\AppData\\LocalLow\\Team Cherry\\Hollow Knight Silksong\\${STEAM_ID}`;
+function getSaveFilesFolder() {
+	const platform = os.platform();
+	const homeDir = os.homedir();
+
+	switch (platform) {
+		case 'win32':
+			return `${homeDir}/AppData/LocalLow/Team Cherry/Hollow Knight Silksong/${STEAM_ID}`;
+		case 'darwin': // macOS
+			return `${homeDir}/Library/Application Support/unity.Team-Cherry.Silksong/${STEAM_ID}`;
+		case 'linux':
+			return `${homeDir}/.config/unity3d/Team Cherry/Hollow Knight Silksong/${STEAM_ID}`;
+		default:
+			throw new Error(`Unsupported platform: ${platform}`);
+	}
+}
+
+const SAVE_FILES_FOLDER = getSaveFilesFolder();
 
 /**
  ** 💡 Steam Cloud Sync
