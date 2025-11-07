@@ -64,6 +64,31 @@ function createBackupRouter(backupService) {
 		}
 	});
 
+	router.put('/rename-backup', async (req, res) => {
+		try {
+			const { folderName, newName } = req.body;
+			const result = await backupService.renameBackup(folderName, newName);
+			res.json(result);
+		} catch (error) {
+			console.error('Error renaming backup:', error);
+			
+			let statusCode = 500;
+			switch (true) {
+				case error.message === 'Invalid backup folder name provided':
+				case error.message === 'Invalid new backup name provided':
+					statusCode = 400;
+					break;
+				case error.message === 'Backup folder not found':
+					statusCode = 404;
+					break;
+				default:
+					statusCode = 500;
+			}
+			
+			res.status(statusCode).json({ error: error.message });
+		}
+	});
+
 	router.delete('/delete-backup', async (req, res) => {
 		try {
 			const { folderName } = req.body;

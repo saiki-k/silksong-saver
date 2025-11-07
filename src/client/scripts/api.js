@@ -70,6 +70,27 @@ async function restoreBackup(folderName, saveSlot) {
 
 /**
  * @param {string} folderName - Full backup folder name
+ * @param {string} newName - New display name for the backup
+ * @returns {Promise<Object>} Response containing rename result
+ */
+async function renameBackup(folderName, newName) {
+	const response = await fetch('/rename-backup', {
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ folderName, newName }),
+	});
+
+	const data = await response.json();
+
+	if (!response.ok) {
+		throw new Error(data.error || 'Failed to rename backup');
+	}
+
+	return data;
+}
+
+/**
+ * @param {string} folderName - Full backup folder name
  * @returns {Promise<Object>} Response containing deletion result
  */
 async function deleteBackup(folderName) {

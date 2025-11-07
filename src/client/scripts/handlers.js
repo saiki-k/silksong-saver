@@ -60,6 +60,44 @@ async function handleRestoreBackup(fullBackupName, slot, event) {
  * @param {string} fullBackupName - Full backup folder name
  * @param {Event} event - Click event
  */
+async function handleRenameBackup(fullBackupName, event) {
+	const newName = prompt('Enter a new name for this backup');
+
+	if (!newName || !newName.trim()) {
+		return;
+	}
+
+	const renameBtn = event.target;
+	const originalText = renameBtn.textContent;
+	renameBtn.disabled = true;
+	renameBtn.textContent = 'Renaming...';
+
+	try {
+		const data = await renameBackup(fullBackupName, newName.trim());
+		showResult(data.message, 'success');
+
+		// Update the display name in the card
+		const card = renameBtn.closest('.backup-card');
+		const nameElement = card.querySelector('.backup-name');
+		nameElement.textContent = newName.trim();
+
+		// Update data attributes if folder name changed
+		if (data.newFolderName) {
+			const buttons = card.querySelectorAll('[data-backup-name]');
+			buttons.forEach((btn) => btn.setAttribute('data-backup-name', data.newFolderName));
+		}
+	} catch (error) {
+		showResult(error.message, 'error');
+	} finally {
+		renameBtn.disabled = false;
+		renameBtn.textContent = originalText;
+	}
+}
+
+/**
+ * @param {string} fullBackupName - Full backup folder name
+ * @param {Event} event - Click event
+ */
 async function handleDeleteBackup(fullBackupName, event) {
 	const confirmMessage = `Are you sure you want to delete this backup?\n\nThis action cannot be undone.`;
 
@@ -90,7 +128,10 @@ async function handleDeleteBackup(fullBackupName, event) {
 function handleBackupButtonClick(event) {
 	const button = event.target;
 
-	if (button.classList.contains('restore-btn')) {
+	if (button.classList.contains('rename-btn')) {
+		const fullBackupName = button.getAttribute('data-backup-name');
+		handleRenameBackup(fullBackupName, event);
+	} else if (button.classList.contains('restore-btn')) {
 		const fullBackupName = button.getAttribute('data-backup-name');
 		const slot = button.getAttribute('data-slot');
 		handleRestoreBackup(fullBackupName, slot, event);

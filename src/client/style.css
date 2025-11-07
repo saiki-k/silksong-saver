@@ -244,6 +244,7 @@ button:hover {
 	font-style: italic;
 }
 
+.rename-btn,
 .restore-btn,
 .delete-btn {
 	color: white;
@@ -261,6 +262,10 @@ button:hover {
 	visibility: hidden;
 }
 
+.rename-btn {
+	background: #2196f3;
+}
+
 .restore-btn {
 	background: #ff6b35;
 }
@@ -269,10 +274,15 @@ button:hover {
 	background: #d32f2f;
 }
 
+.backup-card:hover .rename-btn,
 .backup-card:hover .restore-btn,
 .backup-card:hover .delete-btn {
 	opacity: 1;
 	visibility: visible;
+}
+
+.rename-btn:hover:not(:disabled) {
+	background: #1976d2;
 }
 
 .restore-btn:hover:not(:disabled) {
@@ -283,6 +293,7 @@ button:hover {
 	background: #b71c1c;
 }
 
+.rename-btn:disabled,
 .restore-btn:disabled,
 .delete-btn:disabled {
 	background: #666;

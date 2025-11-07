@@ -130,7 +130,7 @@ class BackupService {
 		await this.metaService.saveMeta(meta);
 
 		// Build response message
-		let message = `✅ Successfully created backup "${finalBackupName}"`;
+		let message = `✅ Successfully created the backup "${finalBackupName}"`;
 		if (copyResults.length > 0) {
 			message += `\nCopied: ${copyResults.join(', ')}`;
 		}
@@ -214,7 +214,7 @@ class BackupService {
 		}
 
 		// Build response message
-		let message = `✅ Successfully restored backup to slot ${saveSlot}`;
+		let message = `✅ Successfully restored the backup to slot ${saveSlot}`;
 		if (restoredFiles.length > 0) {
 			message += `\nRestored: ${restoredFiles.join(', ')}`;
 		}
@@ -226,6 +226,95 @@ class BackupService {
 			success: true,
 			message,
 			itemsRestored: restoredFiles,
+		};
+	}
+
+	/**
+	 * @param {string} folderName - Current backup folder name
+	 * @param {string} newName - New display name for the backup
+	 * @returns {Promise<Object>} Rename result
+	 */
+	async renameBackup(folderName, newName) {
+		if (!folderName || typeof folderName !== 'string') {
+			throw new Error('Invalid backup folder name provided');
+		}
+
+		if (!newName || typeof newName !== 'string' || !newName.trim()) {
+			throw new Error('Invalid new backup name provided');
+		}
+
+		const backupPath = path.join(this.config.backupFolder, folderName);
+		const backupExists = await fs.pathExists(backupPath);
+		if (!backupExists) {
+			throw new Error('Backup folder not found');
+		}
+
+		// Parse the existing folder name to extract timestamp and slot
+		const folderParts = folderName.split('_');
+		if (folderParts.length < 3) {
+			throw new Error('Invalid backup folder name format');
+		}
+
+		const timestamp = folderParts[0];
+		const slotPart = folderParts[1];
+
+		// Validate timestamp and slot format
+		if (!/^\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}$/.test(timestamp)) {
+			throw new Error('Invalid timestamp format in backup folder name');
+		}
+		if (!/^slot[1-4]$/.test(slotPart)) {
+			throw new Error('Invalid slot format in backup folder name');
+		}
+
+		const newSanitizedBackupName = newName
+			.trim()
+			.toLowerCase()
+			.replace(/[<>:"/\\|?* ]/g, '_');
+		const newFolderName = `${timestamp}_${slotPart}_${newSanitizedBackupName}`;
+
+		const newBackupPath = path.join(this.config.backupFolder, newFolderName);
+		const newPathExists = await fs.pathExists(newBackupPath);
+		if (newPathExists && newFolderName !== folderName) {
+			throw new Error('A backup with this name already exists for the same timestamp and slot');
+		}
+
+		// If the folder name would be the same, just update metadata
+		if (newFolderName === folderName) {
+			const meta = await this.metaService.loadMeta();
+			if (meta[folderName]) {
+				meta[folderName].originalName = newName.trim();
+				await this.metaService.saveMeta(meta);
+			}
+
+			return {
+				success: true,
+				message: `✅ Successfully renamed the backup to "${newName.trim()}"`,
+				newDisplayName: newName.trim(),
+				newFolderName: folderName,
+			};
+		}
+
+		// Rename the physical folder
+		await fs.move(backupPath, newBackupPath);
+		console.log(`✓ Renamed folder: ${folderName} -> ${newFolderName}`);
+
+		// Update metadata - remove the old entry and add the new one
+		const meta = await this.metaService.loadMeta();
+		if (meta[folderName]) {
+			const metaData = { ...meta[folderName] };
+			metaData.originalName = newName.trim();
+
+			delete meta[folderName];
+			meta[newFolderName] = metaData;
+
+			await this.metaService.saveMeta(meta);
+		}
+
+		return {
+			success: true,
+			message: `✅ Successfully renamed the backup to "${newName.trim()}"`,
+			newDisplayName: newName.trim(),
+			newFolderName: newFolderName,
 		};
 	}
 
@@ -257,7 +346,7 @@ class BackupService {
 
 		return {
 			success: true,
-			message: `✅ Successfully deleted backup "${folderName}"`,
+			message: `✅ Successfully deleted the backup "${folderName}"`,
 			deletedBackup: folderName,
 		};
 	}

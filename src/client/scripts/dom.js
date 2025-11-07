@@ -49,6 +49,9 @@ function displayBackups(backups) {
 							${backup.restoreCount > 0 ? `<span class="pill restore-count">Restored ${backup.restoreCount}x</span>` : ''}
 						</div>
 						<div class="backup-actions">
+							<button class="rename-btn" data-backup-name="${backup.folderName}">
+								Rename
+							</button>
 							<button class="restore-btn" data-backup-name="${backup.folderName}" data-slot="${backup.slot}">
 								Restore
 							</button>
@@ -138,6 +141,9 @@ function addNewBackupCard(fullBackupName, backupName, slot) {
 					<span class="pill slot">Slot ${slot}</span>
 				</div>
 				<div class="backup-actions">
+					<button class="rename-btn" data-backup-name="${fullBackupName}">
+						Rename
+					</button>
 					<button class="restore-btn" data-backup-name="${fullBackupName}" data-slot="${slot}">
 						Restore
 					</button>
