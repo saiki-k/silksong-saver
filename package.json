@@ -4,17 +4,14 @@
 	"description": "A simple server for managing Hollow Knight: Silksong save backups",
 	"main": "src/server/index.js",
 	"scripts": {
-		"start": "node src/server/index.js",
-		"dev": "nodemon src/server/index.js"
+		"start": "node --env-file-if-exists=.env src/server/index.js",
+		"dev": "node --watch --env-file-if-exists=.env src/server/index.js"
 	},
 	"dependencies": {
 		"express": "^4.18.2",
 		"fs-extra": "^11.1.1",
 		"glob": "^11.0.3"
 	},
-	"devDependencies": {
-		"nodemon": "^3.0.1"
-	},
-	"author": "",
+	"author": "Sai Kishore Komanduri",
 	"license": "MIT"
 }

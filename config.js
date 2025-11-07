@@ -1,7 +1,8 @@
 import path from 'path';
 import os from 'os';
+import fs from 'fs';
 
-const STEAM_ID = '115888760';
+const STEAM_ID = process.env.STEAM_ID || 'YOUR_STEAM_USER_ID_HERE';
 
 function getSaveFilesFolder() {
 	const platform = os.platform();
@@ -9,11 +10,11 @@ function getSaveFilesFolder() {
 
 	switch (platform) {
 		case 'win32':
-			return `${homeDir}/AppData/LocalLow/Team Cherry/Hollow Knight Silksong/${STEAM_ID}`;
+			return path.join(homeDir, 'AppData', 'LocalLow', 'Team Cherry', 'Hollow Knight Silksong', STEAM_ID);
 		case 'darwin': // macOS
-			return `${homeDir}/Library/Application Support/unity.Team-Cherry.Silksong/${STEAM_ID}`;
+			return path.join(homeDir, 'Library', 'Application Support', 'unity.Team-Cherry.Silksong', STEAM_ID);
 		case 'linux':
-			return `${homeDir}/.config/unity3d/Team Cherry/Hollow Knight Silksong/${STEAM_ID}`;
+			return path.join(homeDir, '.config', 'unity3d', 'Team Cherry', 'Hollow Knight Silksong', STEAM_ID);
 		default:
 			throw new Error(`Unsupported platform: ${platform}`);
 	}
@@ -44,5 +45,11 @@ const config = {
 	backupFolder: path.join(SAVE_FILES_FOLDER, RELATIVE_BACKUP_FOLDER, RELATIVE_BACKUP_SUBFOLDER),
 	port: 3000,
 };
+
+if (!fs.existsSync(SAVE_FILES_FOLDER)) {
+	throw new Error(
+		`Save files folder does not exist: ${SAVE_FILES_FOLDER}. Please ensure STEAM_ID is set correctly in config.js.`
+	);
+}
 
 export default config;
