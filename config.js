@@ -15,7 +15,7 @@ const SAVE_FILES_FOLDER = `C:\\Users\\${USER_NAME}\\AppData\\LocalLow\\Team Cher
  **
  ** You can change RELATIVE_BACKUP_SUBFOLDER to an empty string '' if you don't want a subfolder.
  */
-const RELATIVE_BACKUP_FOLDER = 'Saves';
+const RELATIVE_BACKUP_FOLDER = 'Save Backups';
 const RELATIVE_BACKUP_SUBFOLDER = 'Steel Soul Saves';
 
 const config = {
