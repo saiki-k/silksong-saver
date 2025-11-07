@@ -6,9 +6,14 @@ const STEAM_ID = '115888760';
 const SAVE_FILES_FOLDER = `C:\\Users\\${USER_NAME}\\AppData\\LocalLow\\Team Cherry\\Hollow Knight Silksong\\${STEAM_ID}`;
 
 /**
- ** 💡
+ ** 💡 Steam Cloud Sync
  ** With Steam, it's recommended to keep your backups within the SAVE_FILES_FOLDER.
  ** This way, they will be automatically synced to Steam Cloud, and will be available across devices.
+ **
+ ** ⚠️ Steam Cloud Sync Warning
+ ** When using Steam Cloud, always perform backup operations (rename/delete)
+ ** while the game is running. If you modify backups while the game is closed, Steam may
+ ** detect "missing" files and may resync these stale files when the game launches.
  **
  ** RELATIVE_BACKUP_FOLDER, and RELATIVE_BACKUP_SUBFOLDER are relative folders inside SAVE_FILES_FOLDER.
  ** These folders will be created if they do not exist.
