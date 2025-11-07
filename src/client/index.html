@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/svg+xml" href="/assets/garmond.png" />
+	<title>Silksong Saver</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="container">
+		<h1>🤹‍♀️ Silksong Saver</h1>
+
+		<form id="backupForm">
+			<div class="form-group">
+				<label for="backupName">Backup Name</label>
+				<input type="text" id="backupName" placeholder="e.g., moss grotto save before moss mother fight"
+					required />
+			</div>
+
+			<div class="form-group">
+				<label for="saveSlot">Save Slot</label>
+				<select id="saveSlot" required>
+					<option value="">Select slot...</option>
+					<option value="1">Slot 1</option>
+					<option value="2">Slot 2</option>
+					<option value="3">Slot 3</option>
+					<option value="4">Slot 4</option>
+				</select>
+			</div>
+
+			<button type="submit">Create Backup</button>
+		</form>
+
+		<div id="result" class="result"></div>
+
+		<div class="backups-section">
+			<h2>📂 Existing Backups</h2>
+			<div id="backupsList" class="backups-list">
+				<div class="loading">Loading backups...</div>
+			</div>
+		</div>
+
+		<div class="config-section">
+			<h2>⚙️ Configuration</h2>
+			<div class="config-note">These values can be changed in config.js</div>
+			<div id="configInfo" class="config-info">
+				<div class="loading">Loading configuration...</div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="footer">
+		<div class="footer-links">
+			<a href="https://github.com/saiki-k/silksong-saver" target="_blank" class="footer-link">
+				<span class="footer-icon">🔗</span>
+				<span>Github</span>
+			</a>
+			<span class="footer-divider">·</span>
+			<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3599796212" target="_blank"
+				class="footer-link">
+				<span class="footer-icon">📘</span>
+				<span>Steam Guide</span>
+			</a>
+			<span class="footer-divider">·</span>
+			<a href="https://buymeacoffee.com/saiki" target="_blank" class="footer-link">
+				<span class="footer-icon">☕</span>
+				<span>Buy Me A Coffee</span>
+			</a>
+		</div>
+	</footer>
+
+	<!-- Load scripts in order -->
+	<script src="scripts/utils.js"></script>
+	<script src="scripts/api.js"></script>
+	<script src="scripts/handlers.js"></script>
+	<script src="scripts/dom.js"></script>
+	<script src="scripts/main.js"></script>
+</body>
+
+</html>

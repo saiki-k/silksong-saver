@@ -1,0 +1,94 @@
+const express = require('express');
+const router = express.Router();
+
+/**
+ * @param {BackupService} backupService - Backup service instance
+ * @returns {Router} Express router with backup routes
+ */
+function createBackupRouter(backupService) {
+	router.get('/backups', async (req, res) => {
+		try {
+			const backups = await backupService.getBackups();
+			res.json({ backups });
+		} catch (error) {
+			console.error('Error fetching backups:', error);
+			res.status(500).json({ error: 'Failed to fetch backups: ' + error.message });
+		}
+	});
+
+	router.post('/create-backup', async (req, res) => {
+		try {
+			const { backupName, saveSlot } = req.body;
+			const result = await backupService.createBackup(backupName, saveSlot);
+			res.json(result);
+		} catch (error) {
+			console.error('Error creating backup:', error);
+
+			let statusCode = 500;
+			switch (true) {
+				case error.message === 'Invalid save slot provided':
+				case error.message === 'Invalid backup name provided':
+				case error.message.startsWith('No save files found for slot'):
+					statusCode = 400;
+					break;
+				default:
+					statusCode = 500;
+			}
+
+			res.status(statusCode).json({ error: error.message });
+		}
+	});
+
+	router.post('/restore-backup', async (req, res) => {
+		try {
+			const { folderName, saveSlot } = req.body;
+			const result = await backupService.restoreBackup(folderName, saveSlot);
+			res.json(result);
+		} catch (error) {
+			console.error('Error restoring backup:', error);
+
+			let statusCode = 500;
+			switch (true) {
+				case error.message === 'Invalid save slot provided':
+				case error.message === 'Invalid backup folder name provided':
+					statusCode = 400;
+					break;
+				case error.message === 'Backup folder not found':
+					statusCode = 404;
+					break;
+				default:
+					statusCode = 500;
+			}
+
+			res.status(statusCode).json({ error: error.message });
+		}
+	});
+
+	router.delete('/delete-backup', async (req, res) => {
+		try {
+			const { folderName } = req.body;
+			const result = await backupService.deleteBackup(folderName);
+			res.json(result);
+		} catch (error) {
+			console.error('Error deleting backup:', error);
+
+			let statusCode = 500;
+			switch (true) {
+				case error.message === 'Invalid backup folder name provided':
+					statusCode = 400;
+					break;
+				case error.message === 'Backup folder not found':
+					statusCode = 404;
+					break;
+				default:
+					statusCode = 500;
+			}
+
+			res.status(statusCode).json({ error: error.message });
+		}
+	});
+
+	return router;
+}
+
+module.exports = createBackupRouter;
