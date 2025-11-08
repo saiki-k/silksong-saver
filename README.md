@@ -18,44 +18,55 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
 ## 🚀 Quick Setup
 
 1. **Install Node.js**: Download from [nodejs.org](https://nodejs.org)
+
 2. **Clone and install packages**:
+
     ```bash
     git clone --depth 1 https://github.com/saiki-k/silksong-saver.git
     cd silksong-saver
     npm install
     ```
+
 3. **Set up your configuration**:
 
-    ```bash
-    # Make a copy of .env.example and rename it to .env
-    cp .env.example .env
+    Make a copy of the `.env.example` file, and rename it to `.env`.
 
-    # Edit .env file with your configuration
-    # At minimum, update STEAM_ID with your Steam User ID
+    ```bash
+    cp .env.example .env
     ```
 
-    Your Steam User ID can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code".
+    In the newly created `.env` file, update the `STEAM_ID` variable with your Steam User ID, which can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code".
 
-4. **Choose a backup strategy** (edit `.env`):
+    ```env
+    # .env configuration
+    STEAM_ID="YOUR_STEAM_USER_ID_HERE"
+    ```
 
-    **Option A - Store backups inside the game's save folder (recommended if you want your backups to be synced with Steam Cloud)**
+4. **Choose a backup strategy** (edit the `.env` file):
 
-    This is the default configuration (no changes needed) - your backups will be stored in a folder named `Save Backups` inside the game's save folder.
+    - **Option A**: Store backups inside the game's save folder (recommended if you want your backups to be synced with Steam Cloud)
 
-    To customize the backup folder names within the game's save folder, you can set `RELATIVE_BACKUP_FOLDER` and `RELATIVE_BACKUP_SUBFOLDER` (optional) in the `.env` file.
+        ```env
+        # .env configuration for Option A
+        STEAM_ID="YOUR_STEAM_USER_ID_HERE"
+        ```
 
-    > 💡 **Steam Cloud Sync**: If your Steam Cloud is active, using _Option A_ keeps your backups within the game's save directory, ensuring they're automatically synced across devices via [Steam Cloud](https://store.steampowered.com/account/remotestorageapp/?appid=1030300).
-    >
-    > ⚠️ **Steam Cloud Sync Warning**: When using Steam Cloud, always perform backup operations (rename/delete) while the game is running. If you modify backups while the game is closed, Steam may detect "missing" files and may resync these stale files when the game launches.
+        This is the default configuration (no additional changes needed, apart from setting the `STEAM_ID`) - your backups will be stored in a folder named `Save Backups` inside the game's save folder.
+
+        To customize the backup folder names within the game's save folder, you can set `RELATIVE_BACKUP_FOLDER` and `RELATIVE_BACKUP_SUBFOLDER` (optional) in the `.env` file.
+
+        > 💡 **Steam Cloud Sync**: If your Steam Cloud is active, using _Option A_ keeps your backups within the game's save directory, ensuring they're automatically synced across devices via [Steam Cloud](https://store.steampowered.com/account/remotestorageapp/?appid=1030300).
+        >
+        > ⚠️ **Steam Cloud Sync Warning**: When using Steam Cloud, always perform backup operations (rename/delete) while the game is running. If you modify backups while the game is closed, Steam may detect "missing" files and may resync these stale files when the game launches.
 
     ***
 
-    **Option B - Store backups inside a custom folder**
-
-    ```env
-    STEAM_ID="YOUR_STEAM_USER_ID_HERE"
-    BACKUP_FOLDER="C:\Users\YourUserName\Dropbox\Silksong Save Backups"
-    ```
+    - **Option B**: Store backups inside a custom folder
+        ```env
+        # .env configuration for Option B
+        STEAM_ID="YOUR_STEAM_USER_ID_HERE"
+        BACKUP_FOLDER="C:\Users\YourUserName\Documents\Silksong Save Backups"
+        ```
 
 5. **Launch the server**: `npm start`
 6. **Open in a (Steam) browser**: `http://localhost:3000`
