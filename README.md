@@ -35,7 +35,7 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
     cp .env.example .env
     ```
 
-    In the newly created `.env` file, update the `STEAM_ID` variable with your Steam User ID, which can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code".
+    In the newly created `.env` file, update the `STEAM_ID` variable with your Steam User ID, which can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code". For non-Steam builds, this should probably be `default` (Read the "PC Save File Locations" FAQ [here](https://hollowknightsilksong.com/help)).
 
     ```env
     # .env configuration
