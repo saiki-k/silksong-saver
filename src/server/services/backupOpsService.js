@@ -194,8 +194,8 @@ class BackupOpsService {
 		const restorePointsSource = path.join(backupPath, `Restore_Points${saveSlot}`);
 		const restorePointsTarget = path.join(this.config.sourceFolder, `Restore_Points${saveSlot}`);
 
-		const restorePointsExists = await fs.pathExists(restorePointsSource);
-		if (restorePointsExists) {
+		const restorePointsExist = await fs.pathExists(restorePointsSource);
+		if (restorePointsExist) {
 			try {
 				await fs.remove(restorePointsTarget);
 				await fs.copy(restorePointsSource, restorePointsTarget);
