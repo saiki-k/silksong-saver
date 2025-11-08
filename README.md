@@ -20,11 +20,11 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
 1. **Install Node.js**: Download from [nodejs.org](https://nodejs.org)
 2. **Clone and install packages**:
     ```bash
-    git clone https://github.com/saiki-k/silksong-saver.git
+    git clone --depth 1 https://github.com/saiki-k/silksong-saver.git
     cd silksong-saver
     npm install
     ```
-3. **Configure environment variables**:
+3. **Set up your configuration**:
 
     ```bash
     # Make a copy of .env.example and rename it to .env
@@ -38,7 +38,7 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
 
 4. **Choose a backup strategy** (edit `.env`):
 
-    **Option A - Store backups inside the game's save folder (recommended if you want your backups to be synced with Steam Cloud):**
+    **Option A - Store backups inside the game's save folder (recommended if you want your backups to be synced with Steam Cloud)**
 
     This is the default configuration (no changes needed) - your backups will be stored in a folder named `Save Backups` inside the game's save folder.
 
@@ -48,7 +48,9 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
     >
     > ⚠️ **Steam Cloud Sync Warning**: When using Steam Cloud, always perform backup operations (rename/delete) while the game is running. If you modify backups while the game is closed, Steam may detect "missing" files and may resync these stale files when the game launches.
 
-    **Option B - Store backups inside a custom folder:**
+    ***
+
+    **Option B - Store backups inside a custom folder**
 
     ```env
     STEAM_ID="YOUR_STEAM_USER_ID_HERE"
