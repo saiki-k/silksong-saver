@@ -23,6 +23,12 @@ function getSaveFilesFolder() {
 
 const SAVE_FILES_FOLDER = getSaveFilesFolder();
 
+if (!fs.existsSync(SAVE_FILES_FOLDER)) {
+	throw new Error(
+		`Save files folder does not exist: ${SAVE_FILES_FOLDER}. Please ensure STEAM_ID is set correctly in your .env file.`
+	);
+}
+
 const BACKUP_FOLDER = process.env.BACKUP_FOLDER;
 const RELATIVE_BACKUP_FOLDER = process.env.RELATIVE_BACKUP_FOLDER || 'Save Backups';
 const RELATIVE_BACKUP_SUBFOLDER = process.env.RELATIVE_BACKUP_SUBFOLDER || '';
@@ -32,11 +38,5 @@ const config = {
 	backupFolder: BACKUP_FOLDER || path.join(SAVE_FILES_FOLDER, RELATIVE_BACKUP_FOLDER, RELATIVE_BACKUP_SUBFOLDER),
 	port: process.env.PORT || 3000,
 };
-
-if (!fs.existsSync(SAVE_FILES_FOLDER)) {
-	throw new Error(
-		`Save files folder does not exist: ${SAVE_FILES_FOLDER}. Please ensure STEAM_ID is set correctly in your .env file.`
-	);
-}
 
 export default config;
