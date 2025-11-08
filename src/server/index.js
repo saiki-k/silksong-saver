@@ -9,7 +9,7 @@ const { errorHandler } = require('./middleware/middleware');
 
 let config;
 try {
-	config = require('../../config').default;
+	config = require('../config').default;
 } catch (error) {
 	console.error('Error loading config.json:', error.message);
 	process.exit(1);
