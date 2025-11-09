@@ -35,11 +35,11 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
     cp .env.example .env
     ```
 
-    In the newly created `.env` file, update the `STEAM_ID` variable with your Steam User ID, which can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code". For non-Steam builds, this should probably be `default` (Read the "PC Save File Locations" FAQ [here](https://hollowknightsilksong.com/help)).
+    In the newly created `.env` file, update the `SAVE_USER_ID` variable with your Steam User ID, which can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code". For non-Steam builds, this should probably be `default` (Read the "PC Save File Locations" FAQ [here](https://hollowknightsilksong.com/help)).
 
     ```env
     # .env configuration
-    STEAM_ID="YOUR_STEAM_USER_ID_HERE"
+    SAVE_USER_ID="YOUR_STEAM_USER_ID_HERE"
     ```
 
 4. **Choose a backup strategy** (edit the `.env` file):
@@ -48,10 +48,10 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
 
         ```env
         # .env configuration for Option A
-        STEAM_ID="YOUR_STEAM_USER_ID_HERE"
+        SAVE_USER_ID="YOUR_STEAM_USER_ID_HERE"
         ```
 
-        This is the default configuration (no additional changes needed, apart from setting the `STEAM_ID`) - your backups will be stored in a folder named `Save Backups` inside the game's save folder.
+        This is the default configuration (no additional changes needed, apart from setting the `SAVE_USER_ID`) - your backups will be stored in a folder named `Save Backups` inside the game's save folder.
 
         To customize the backup folder names within the game's save folder, you can set `RELATIVE_BACKUP_FOLDER` and `RELATIVE_BACKUP_SUBFOLDER` (optional) in the `.env` file.
 
@@ -64,7 +64,7 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
     - **Option B**: Store backups inside a custom folder
         ```env
         # .env configuration for Option B
-        STEAM_ID="YOUR_STEAM_USER_ID_HERE"
+        SAVE_USER_ID="YOUR_STEAM_USER_ID_HERE"
         BACKUP_FOLDER="C:\Users\YourUserName\Documents\Silksong Save Backups"
         ```
 

@@ -2,20 +2,33 @@ import path from 'path';
 import os from 'os';
 import fs from 'fs';
 
-const STEAM_ID = process.env.STEAM_ID;
+const SAVE_USER_ID = process.env.SAVE_USER_ID;
 
-if (!STEAM_ID) {
-	throw new Error('STEAM_ID environment variable is not set. Please set it in your .env file.');
+if (!SAVE_USER_ID) {
+	throw new Error('SAVE_USER_ID environment variable is not set. Please set it in your .env file.');
 }
 
 function getSaveFilesFolder() {
 	switch (os.platform()) {
 		case 'win32':
-			return path.join(os.homedir(), 'AppData', 'LocalLow', 'Team Cherry', 'Hollow Knight Silksong', STEAM_ID);
+			return path.join(
+				os.homedir(),
+				'AppData',
+				'LocalLow',
+				'Team Cherry',
+				'Hollow Knight Silksong',
+				SAVE_USER_ID
+			);
 		case 'darwin': // macOS
-			return path.join(os.homedir(), 'Library', 'Application Support', 'unity.Team-Cherry.Silksong', STEAM_ID);
+			return path.join(
+				os.homedir(),
+				'Library',
+				'Application Support',
+				'unity.Team-Cherry.Silksong',
+				SAVE_USER_ID
+			);
 		case 'linux':
-			return path.join(os.homedir(), '.config', 'unity3d', 'Team Cherry', 'Hollow Knight Silksong', STEAM_ID);
+			return path.join(os.homedir(), '.config', 'unity3d', 'Team Cherry', 'Hollow Knight Silksong', SAVE_USER_ID);
 		default:
 			throw new Error(`Unsupported platform: ${os.platform()}`);
 	}
@@ -25,7 +38,7 @@ const SAVE_FILES_FOLDER = getSaveFilesFolder();
 
 if (!fs.existsSync(SAVE_FILES_FOLDER)) {
 	throw new Error(
-		`Save files folder does not exist: ${SAVE_FILES_FOLDER}. Please ensure STEAM_ID is set correctly in your .env file.`
+		`Save files folder does not exist: ${SAVE_FILES_FOLDER}. Please ensure SAVE_USER_ID is set correctly in your .env file.`
 	);
 }
 
