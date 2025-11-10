@@ -5,8 +5,8 @@ let isSEA = false;
 let getAsset = null;
 
 try {
-	const { isSea } = require('node:sea');
-	isSEA = isSea();
+	const sea = require('node:sea');
+	isSEA = sea.isSea();
 	getAsset = sea.getAsset;
 } catch {}
 
