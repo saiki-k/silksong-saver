@@ -2,10 +2,17 @@ const express = require('express');
 const router = express.Router();
 
 /**
- * @param {BackupOpsService} backupOpsService - Backup service instance
- * @returns {Router} Express router with backup routes
+ * @param {Object} options - Router options
+ * @param {BackupOpsService} options.backupOpsService - Backup service instance
+ * @param {Object} options.config - Configuration object
+ * @returns {express.Router} Express router with backup routes
  */
-function createBackupRouter(backupOpsService) {
+function createBackupOpsRouter({ backupOpsService, config }) {
+	router.get('/config', (req, res) => {
+		const { sourceFolder, backupFolder, port } = config;
+		res.json({ sourceFolder, backupFolder, port });
+	});
+
 	router.get('/backups', async (req, res) => {
 		try {
 			const backups = await backupOpsService.getBackups();
@@ -116,4 +123,4 @@ function createBackupRouter(backupOpsService) {
 	return router;
 }
 
-module.exports = createBackupRouter;
+module.exports = createBackupOpsRouter;

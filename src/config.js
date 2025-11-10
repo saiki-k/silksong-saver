@@ -1,6 +1,9 @@
-import path from 'path';
-import os from 'os';
-import fs from 'fs';
+const path = require('path');
+const os = require('os');
+const fs = require('fs');
+const { loadEnvFile } = require('./server/utils/envLoader');
+
+loadEnvFile();
 
 const SAVE_USER_ID = process.env.SAVE_USER_ID;
 
@@ -52,4 +55,4 @@ const config = {
 	port: process.env.PORT || 3000,
 };
 
-export default config;
+module.exports = { default: config };

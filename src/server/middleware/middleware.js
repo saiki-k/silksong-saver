@@ -1,7 +1,9 @@
+const express = require('express');
+
 /**
- * @param {Request} req - Express request object
- * @param {Response} res - Express response object
- * @param {Function} next - Next middleware function
+ * @param {express.Request} req - Express request object
+ * @param {express.Response} res - Express response object
+ * @param {express.NextFunction} next - Next middleware function
  */
 function requestLogger(req, res, next) {
 	const timestamp = new Date().toISOString();
@@ -11,9 +13,9 @@ function requestLogger(req, res, next) {
 
 /**
  * @param {Error} err - Error object
- * @param {Request} req - Express request object
- * @param {Response} res - Express response object
- * @param {Function} next - Next middleware function
+ * @param {express.Request} req - Express request object
+ * @param {express.Response} res - Express response object
+ * @param {express.NextFunction} next - Next middleware function
  */
 function errorHandler(err, req, res, next) {
 	console.error('Error:', err);
