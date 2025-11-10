@@ -1,38 +1,33 @@
 const express = require('express');
 const path = require('path');
-
-let isSEA = false;
-let getAsset = null;
-
-try {
-	const sea = require('node:sea');
-	isSEA = sea.isSea();
-	getAsset = sea.getAsset;
-} catch {}
+const sea = require('node:sea');
 
 function createStaticAssetsRouter() {
 	const router = express.Router();
 
-	if (isSEA) {
+	if (sea.isSea()) {
 		router.get('/', (req, res) => {
 			res.set('Content-Type', 'text/html');
-			res.send(getAsset('client/index.html'));
+			const asset = sea.getAsset('client/index.html');
+			res.send(Buffer.from(asset));
 		});
 
 		router.get('/style.css', (req, res) => {
 			res.set('Content-Type', 'text/css');
-			res.send(getAsset('client/style.css'));
+			const asset = sea.getAsset('client/style.css');
+			res.send(Buffer.from(asset));
 		});
 
 		router.get('/scripts/:file', (req, res) => {
 			res.set('Content-Type', 'application/javascript');
-			res.send(getAsset(`client/scripts/${req.params.file}`));
+			const asset = sea.getAsset(`client/scripts/${req.params.file}`);
+			res.send(Buffer.from(asset));
 		});
 
 		router.get('/assets/:file', (req, res) => {
-			const buffer = getAsset(`client/assets/${req.params.file}`);
 			res.set('Content-Type', 'image/png');
-			res.send(buffer);
+			const asset = sea.getAsset(`client/assets/${req.params.file}`);
+			res.send(Buffer.from(asset));
 		});
 	} else {
 		router.get('/', (req, res) => {

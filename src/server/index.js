@@ -25,8 +25,8 @@ async function startServer() {
 
 	app.use(express.json());
 
-	app.use('/', createBackupOpsRouter({ backupOpsService, config }));
 	app.use('/', createStaticAssetsRouter());
+	app.use('/', createBackupOpsRouter({ backupOpsService, config }));
 
 	app.use(errorHandler);
 

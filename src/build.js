@@ -154,7 +154,7 @@ async function build() {
 	existsSync(iconPath) && unlinkSync(iconPath);
 
 	console.log(`\n✅ Build complete!`);
-	console.log(`Executable: ${path.relative(process.cwd(), outputExePath)}`);
+	console.log(`Executable: ${path.relative(process.cwd(), distExePath)}`);
 	console.log(`Package: ${path.relative(process.cwd(), zipPath)}`);
 }
 

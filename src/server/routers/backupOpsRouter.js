@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 
 /**
  * @param {Object} options - Router options
@@ -8,6 +7,8 @@ const router = express.Router();
  * @returns {express.Router} Express router with backup routes
  */
 function createBackupOpsRouter({ backupOpsService, config }) {
+	const router = express.Router();
+
 	router.get('/config', (req, res) => {
 		const { sourceFolder, backupFolder, port } = config;
 		res.json({ sourceFolder, backupFolder, port });
