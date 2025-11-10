@@ -116,10 +116,14 @@ async function build() {
 	}
 
 	console.log('\n6. Creating distribution package (zip archive)...');
-	const distDir = path.join(buildDir, 'silksong-saver');
+
+	const osSuffix = process.platform === 'win32' ? 'windows' : process.platform === 'darwin' ? 'macos' : 'linux';
+	const extension = process.platform === 'win32' ? '.exe' : '';
+	const distDirName = `silksong-saver-${osSuffix}`;
+	const distDir = path.join(buildDir, distDirName);
 	mkdirSync(distDir, { recursive: true });
 
-	const distExePath = path.join(distDir, 'silksong-saver.exe');
+	const distExePath = path.join(distDir, `silksong-saver${extension}`);
 	copyFileSync(outputExePath, distExePath);
 
 	const envExamplePath = path.join(__dirname, '..', '.env.example');
@@ -129,7 +133,7 @@ async function build() {
 	const AdmZip = require('adm-zip');
 	const zip = new AdmZip();
 	zip.addLocalFolder(distDir);
-	const zipPath = path.join(buildDir, 'silksong-saver.zip');
+	const zipPath = path.join(buildDir, `${distDirName}.zip`);
 	zip.writeZip(zipPath);
 
 	console.log('\n7. Cleaning up temporary files...');
