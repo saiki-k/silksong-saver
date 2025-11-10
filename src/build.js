@@ -55,7 +55,6 @@ async function build() {
 
 	if (existsSync(pngPath)) {
 		try {
-			// Convert PNG to ICO
 			const pngToIco = require('png-to-ico');
 			const icoBuffer = await pngToIco(pngPath);
 			writeFileSync(iconPath, icoBuffer);
@@ -69,7 +68,7 @@ async function build() {
 			// Read the executable (allow unsigned/modified executables)
 			const exeData = fs.readFileSync(outputExePath);
 			const exe = ResEdit.NtExecutable.from(exeData, { ignoreCert: true });
-			const res = ResEdit.NtExecutableResource.from(exe); // Set icon
+			const res = ResEdit.NtExecutableResource.from(exe);
 			const iconFile = ResEdit.Data.IconFile.from(fs.readFileSync(iconPath));
 			ResEdit.Resource.IconGroupEntry.replaceIconsForResource(
 				res.entries,

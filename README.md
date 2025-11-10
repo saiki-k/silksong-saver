@@ -1,5 +1,7 @@
 # 🤹‍♀️ Silksong Saver · Manage Unlimited Save Backups
 
+[Download](../../releases) • [Report Bugs](../../issues)
+
 A simple, local tool for managing **Hollow Knight: Silksong** (Steam) save backups. Access it locally (http://localhost:3000) from Steam's in-game browser or any browser.
 
 While the game provides only four save slots, this tool lets you create unlimited named backups for experimentation, testing different routes, or preserving specific moments you want to revisit.
@@ -16,29 +18,29 @@ I haven't tested it, but this should work with **Hollow Knight** saves as well.
 -   **Rename / Restore / Delete backups** directly from the displayed backup list
 -   **Configuration display** with current (source and backup) folder paths
 
-## 🚀 Quick setup
+## 🚀 Quick Setup
 
 You can either use the pre-built standalone executable or run the project from source.
 
 ### Use the standalone executable (Recommended)
 
-1. **Download and extract** the zip file for your OS from the [latest release](https://github.com/saiki-k/silksong-saver/releases)
+1. **Download and extract** the zip file, for your OS, from the [latest release](https://github.com/saiki-k/silksong-saver/releases)
 
-2. **Edit the `.env` file** and set your Steam User ID:
+2. **Set up configuration (for save files' folder detection)**:
+
+    Edit the `.env` file, and update the `SAVE_USER_ID` variable with your Steam User ID, which can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code". For non-Steam builds, use `default` (see the "PC Save File Locations" FAQ [here](https://hollowknightsilksong.com/help)).
 
     ```env
     SAVE_USER_ID="YOUR_STEAM_USER_ID_HERE"
     ```
 
-    Your Steam User ID can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code". For non-Steam builds, use `default` (see "PC Save File Locations" [here](https://hollowknightsilksong.com/help)).
-
 3. **Run the executable**
 
 4. **Open in a (Steam or any) browser**: `http://localhost:3000`
 
-### Run from source
+### Run from Source
 
-1. **Install Node.js** v20.6.0 or higher from [nodejs.org](https://nodejs.org)
+1. **Install Node.js (v20.6.0 or higher)**: Download from [nodejs.org](https://nodejs.org)
 
 2. **Clone and install dependencies**:
 
@@ -48,11 +50,15 @@ You can either use the pre-built standalone executable or run the project from s
     npm install
     ```
 
-3. **Configure**: Copy `.env.example` to `.env` and set your Steam User ID:
+3. **Set up configuration (for save files' folder detection)**:
+
+    Make a copy of the .env.example file, and rename it to .env.
 
     ```bash
     cp .env.example .env
     ```
+
+    In the newly created .env file, update the `SAVE_USER_ID` variable with your Steam User ID, which can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code". For non-Steam builds, use `default` (see the "PC Save File Locations" FAQ [here](https://hollowknightsilksong.com/help)).
 
     ```env
     SAVE_USER_ID="YOUR_STEAM_USER_ID_HERE"
@@ -62,7 +68,7 @@ You can either use the pre-built standalone executable or run the project from s
 
 5. **Open in a (Steam or any) browser**: `http://localhost:3000`
 
-## ⚙️ Configuration
+## ⚙️ Backup Configuration
 
 Whether using the executable or running from source, customize your backup strategy by editing the `.env` file:
 
@@ -93,7 +99,7 @@ Whether using the executable or running from source, customize your backup strat
 
     > Use the appropriate path format for your OS (Windows: `C:\...`, macOS/Linux: `/home/...` or `~/...`)
 
-## 🔨 Building from source
+## 🔨 Building from Source
 
 Run the following command to create a standalone executable.
 
