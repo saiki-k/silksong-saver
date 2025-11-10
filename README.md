@@ -22,7 +22,7 @@ You can either use the pre-built standalone executable or run the project from s
 
 ### Use the standalone executable (Recommended)
 
-1. **Download and extract** the zip file from the [releases page](https://github.com/saiki-k/silksong-saver/releases)
+1. **Download and extract** the zip file for your OS from the [latest release](https://github.com/saiki-k/silksong-saver/releases)
 
 2. **Edit the `.env` file** and set your Steam User ID:
 

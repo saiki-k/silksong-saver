@@ -117,7 +117,16 @@ async function build() {
 
 	console.log('\n6. Creating distribution package (zip archive)...');
 
-	const osSuffix = process.platform === 'win32' ? 'windows' : process.platform === 'darwin' ? 'macos' : 'linux';
+	let osSuffix;
+	if (process.platform === 'win32') {
+		osSuffix = 'windows';
+	} else if (process.platform === 'darwin') {
+		const arch = process.arch === 'arm64' ? 'apple-silicon' : 'intel';
+		osSuffix = `macos-${arch}`;
+	} else {
+		osSuffix = 'linux';
+	}
+
 	const extension = process.platform === 'win32' ? '.exe' : '';
 	const distDirName = `silksong-saver-${osSuffix}`;
 	const distDir = path.join(buildDir, distDirName);
