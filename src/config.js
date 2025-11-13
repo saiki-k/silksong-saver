@@ -8,7 +8,9 @@ loadEnvFile();
 const SAVE_USER_ID = process.env.SAVE_USER_ID;
 
 if (!SAVE_USER_ID) {
-	throw new Error('SAVE_USER_ID environment variable is not set. Please set it in your .env file.');
+	throw new Error(
+		'SAVE_USER_ID environment variable is not set. Please set it in your configuration file (config or .env).'
+	);
 }
 
 function getSaveFilesFolder() {
@@ -41,7 +43,7 @@ const SAVE_FILES_FOLDER = getSaveFilesFolder();
 
 if (!fs.existsSync(SAVE_FILES_FOLDER)) {
 	throw new Error(
-		`Save files folder does not exist: ${SAVE_FILES_FOLDER}. Please ensure SAVE_USER_ID is set correctly in your .env file.`
+		`Save files folder does not exist: ${SAVE_FILES_FOLDER}. Please ensure SAVE_USER_ID is set correctly in your configuration file (config or .env).`
 	);
 }
 

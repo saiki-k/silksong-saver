@@ -13,7 +13,7 @@ async function startServer() {
 		config = require('../config').default;
 	} catch (error) {
 		console.error('Failed to start server!');
-		console.error('Error loading config.json:', error.message);
+		console.error('Error in loading configuration:', error.message);
 		shutDown({ hasError: true });
 		return;
 	}
