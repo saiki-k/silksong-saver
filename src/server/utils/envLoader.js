@@ -3,12 +3,19 @@ const path = require('path');
 
 function loadEnvFile() {
 	const envPath = path.join(process.cwd(), '.env');
-	if (!fs.existsSync(envPath)) {
-		console.warn('\n⚠️ .env file not found, skipping environment variable loading.\n');
+	const configPath = path.join(process.cwd(), 'config');
+	
+	let envFilePath;
+	if (fs.existsSync(envPath)) {
+		envFilePath = envPath;
+	} else if (fs.existsSync(configPath)) {
+		envFilePath = configPath;
+	} else {
+		console.warn('\n⚠️ Configuration file not found (.env or config), skipping environment variable loading.\n');
 		return;
 	}
 
-	const envContent = fs.readFileSync(envPath, 'utf8');
+	const envContent = fs.readFileSync(envFilePath, 'utf8');
 	envContent.split('\n').forEach((line) => {
 		line = line.trim();
 		if (line && !line.startsWith('#')) {

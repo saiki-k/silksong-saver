@@ -141,8 +141,8 @@ async function build() {
 	copyFileSync(outputExePath, distExePath);
 
 	const envExamplePath = path.join(__dirname, '..', '.env.example');
-	const distEnvPath = path.join(distDir, '.env');
-	copyFileSync(envExamplePath, distEnvPath);
+	const distConfigPath = path.join(distDir, 'config');
+	copyFileSync(envExamplePath, distConfigPath);
 
 	const AdmZip = require('adm-zip');
 	const zip = new AdmZip();

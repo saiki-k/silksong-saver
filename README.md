@@ -28,7 +28,7 @@ You can either use the pre-built standalone executable or run the project from s
 
 2. **Set up configuration (for save files' folder detection)**:
 
-    Edit the `.env` file, and update the `SAVE_USER_ID` variable with your Steam User ID, which can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code". For non-Steam builds, use `default` (see the "PC Save File Locations" FAQ [here](https://hollowknightsilksong.com/help)).
+    Edit the `config` file, and update the `SAVE_USER_ID` variable with your Steam User ID, which can be found [here](https://steamcommunity.com/my/friends/add) as "Your Friend Code". For non-Steam builds, use `default` (see the "PC Save File Locations" FAQ [here](https://hollowknightsilksong.com/help)).
 
     ```env
     SAVE_USER_ID="YOUR_STEAM_USER_ID_HERE"
@@ -70,18 +70,18 @@ You can either use the pre-built standalone executable or run the project from s
 
 ## ⚙️ Backup Configuration
 
-Whether using the executable or running from source, customize your backup strategy by editing the `.env` file:
+Whether using the executable or running from source, customize your backup strategy by editing the configuration file (`config` for executable, `.env` for source):
 
 -   **Option A**: Store backups inside the game's save folder (recommended if you want your backups to be synced with Steam Cloud)
 
     This is the default configuration (no additional changes needed, apart from setting the `SAVE_USER_ID`) - your backups will be stored in a folder named `Save Backups` inside the game's save folder.
 
     ```env
-    # .env configuration for Option A
+    # Configuration for Option A
     SAVE_USER_ID="YOUR_STEAM_USER_ID_HERE"
     ```
 
-    To customize the backup folder names within the game's save folder, you can set `RELATIVE_BACKUP_FOLDER` and `RELATIVE_BACKUP_SUBFOLDER` (optional) in the `.env` file.
+    To customize the backup folder names within the game's save folder, you can set `RELATIVE_BACKUP_FOLDER` and `RELATIVE_BACKUP_SUBFOLDER` (optional) in the configuration file.
 
     <p align="center" style="margin: 20px 0;">• • •</p>
 
@@ -99,10 +99,10 @@ Whether using the executable or running from source, customize your backup strat
 
 -   **Option B**: Store backups inside a custom folder
 
-    Set the `BACKUP_FOLDER` variable in the `.env` file to your desired backup location.
+    Set the `BACKUP_FOLDER` variable in the configuration file to your desired backup location. This can be any valid folder path on your system.
 
     ```env
-    # .env configuration for Option B
+    # Configuration for Option B
     SAVE_USER_ID="YOUR_STEAM_USER_ID_HERE"
     BACKUP_FOLDER="C:\Users\YourUserName\Documents\Silksong Save Backups"
     ```
