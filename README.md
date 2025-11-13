@@ -74,22 +74,26 @@ Whether using the executable or running from source, customize your backup strat
 
 -   **Option A**: Store backups inside the game's save folder (recommended if you want your backups to be synced with Steam Cloud)
 
+    This is the default configuration (no additional changes needed, apart from setting the `SAVE_USER_ID`) - your backups will be stored in a folder named `Save Backups` inside the game's save folder.
+
     ```env
     # .env configuration for Option A
     SAVE_USER_ID="YOUR_STEAM_USER_ID_HERE"
     ```
-
-    This is the default configuration (no additional changes needed, apart from setting the `SAVE_USER_ID`) - your backups will be stored in a folder named `Save Backups` inside the game's save folder.
 
     To customize the backup folder names within the game's save folder, you can set `RELATIVE_BACKUP_FOLDER` and `RELATIVE_BACKUP_SUBFOLDER` (optional) in the `.env` file.
 
     > 💡 **Steam Cloud Sync**: If your Steam Cloud is active, using _Option A_ keeps your backups within the game's save directory, ensuring they're automatically synced across devices via [Steam Cloud](https://store.steampowered.com/account/remotestorageapp/?appid=1030300).
     >
     > ⚠️ **Steam Cloud Sync Warning**: When using Steam Cloud, always perform backup operations (rename/delete) while the game is running. If you modify backups while the game is closed, Steam may detect "missing" files and may resync these stale files when the game launches.
+    >
+    > ⚠️ **Steam Cloud Storage Consideration**: Steam Cloud provides limited storage space (approximately 100 MB per game). If you plan to maintain a large number of backups (say, 100+), consider using Option B with a custom backup folder to avoid exceeding your Steam Cloud quota.
 
 ---
 
 -   **Option B**: Store backups inside a custom folder
+
+    Set the `BACKUP_FOLDER` variable in the `.env` file to your desired backup location. This can be any valid folder path on your system.
 
     ```env
     # .env configuration for Option B
@@ -97,7 +101,12 @@ Whether using the executable or running from source, customize your backup strat
     BACKUP_FOLDER="C:\Users\YourUserName\Documents\Silksong Save Backups"
     ```
 
-    > Use the appropriate path format for your OS (Windows: `C:\...`, macOS/Linux: `/home/...` or `~/...`)
+    > 💡 **Tip**: You can set `BACKUP_FOLDER` using a relative path. Paths are resolved relative to the executable location (or project root if running from source).
+    >
+    > ```env
+    > # BACKUP_FOLDER using a relative path
+    > BACKUP_FOLDER="./Save Backups"
+    > ```
 
 ## 🔨 Building from Source
 

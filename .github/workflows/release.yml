@@ -43,19 +43,40 @@ jobs:
             contents: write
 
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
             - name: Download all artifacts
               uses: actions/download-artifact@v4
               with:
                   path: artifacts
 
+            - name: Read release notes
+              id: release_notes
+              run: |
+                  FILE=".github/release-notes/${{ github.ref_name }}.md"
+                  if [ -f "$FILE" ]; then
+                    echo "NOTES<<EOF" >> $GITHUB_OUTPUT
+                    cat "$FILE" >> $GITHUB_OUTPUT
+                    echo "EOF" >> $GITHUB_OUTPUT
+                  else
+                    echo "NOTES<<EOF" >> $GITHUB_OUTPUT
+                    echo "## Silksong Saver ${{ github.ref_name }}" >> $GITHUB_OUTPUT
+                    echo "" >> $GITHUB_OUTPUT
+                    echo "No release notes provided. Please add them in .github/release-notes/${{ github.ref_name }}.md" >> $GITHUB_OUTPUT
+                    echo "EOF" >> $GITHUB_OUTPUT
+                  fi
+
             - name: Create Release
               uses: softprops/action-gh-release@v1
               with:
                   files: artifacts/**/*.zip
-                  draft: false
+                  draft: true
                   prerelease: false
                   body: |
-                      ## Silksong Saver ${{ github.ref_name }}
+                      ${{ steps.release_notes.outputs.NOTES }}
+
+                      ## Downloads
 
                       Download the appropriate version for your platform:
                       - **Windows**: `silksong-saver-windows.zip`
