@@ -14,6 +14,10 @@ async function build() {
 	const bundledPath = path.join(buildDir, 'bundled.js');
 	const seaConfigPath = path.join(buildDir, 'sea-config.json');
 
+	// Get version from package.json
+	const packageJson = require('../package.json');
+	const version = packageJson.version;
+
 	console.log('\n1. Bundling application with dependencies using ncc...');
 	execSync(`npx ncc build src/server/index.js -o build/ncc-output`, { stdio: 'inherit' });
 
@@ -81,6 +85,8 @@ async function build() {
 			const viList = ResEdit.Resource.VersionInfo.fromEntries(res.entries);
 			const vi = viList[0] || ResEdit.Resource.VersionInfo.createEmpty();
 
+			const versionParts = version.split('.').map(Number);
+
 			vi.setStringValues(
 				{ lang: 1033, codepage: 1200 },
 				{
@@ -89,15 +95,15 @@ async function build() {
 					CompanyName: 'Sai Kishore Komanduri',
 					LegalCopyright: 'MIT License',
 					OriginalFilename: 'silksong-saver.exe',
-					FileVersion: '1.0.0.0',
-					ProductVersion: '1.0.0.0',
+					FileVersion: `${version}.0`,
+					ProductVersion: `${version}.0`,
 				}
 			);
 
 			vi.removeStringValue({ lang: 1033, codepage: 1200 }, 'PrivateBuild');
 			vi.removeStringValue({ lang: 1033, codepage: 1200 }, 'SpecialBuild');
-			vi.setFileVersion(1, 0, 0, 0, 1033);
-			vi.setProductVersion(1, 0, 0, 0, 1033);
+			vi.setFileVersion(versionParts[0] || 1, versionParts[1] || 0, versionParts[2] || 0, 0, 1033);
+			vi.setProductVersion(versionParts[0] || 1, versionParts[1] || 0, versionParts[2] || 0, 0, 1033);
 			vi.outputToResourceEntries(res.entries);
 
 			// Write changes back
@@ -141,7 +147,7 @@ async function build() {
 	const AdmZip = require('adm-zip');
 	const zip = new AdmZip();
 	zip.addLocalFolder(distDir);
-	const zipPath = path.join(buildDir, `${distDirName}.zip`);
+	const zipPath = path.join(buildDir, `${distDirName}-v${version}.zip`);
 	zip.writeZip(zipPath);
 
 	console.log('\n7. Cleaning up temporary files...');
