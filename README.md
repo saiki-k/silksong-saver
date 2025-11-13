@@ -24,7 +24,7 @@ You can either use the pre-built standalone executable or run the project from s
 
 ### Use the standalone executable (Recommended)
 
-1. **Download and extract** the zip file, for your OS, from the [latest release](https://github.com/saiki-k/silksong-saver/releases)
+1. **Download and extract** the zip file, for your OS, from the [latest release](../../releases/latest)
 
 2. **Set up configuration (for save files' folder detection)**:
 
@@ -83,17 +83,23 @@ Whether using the executable or running from source, customize your backup strat
 
     To customize the backup folder names within the game's save folder, you can set `RELATIVE_BACKUP_FOLDER` and `RELATIVE_BACKUP_SUBFOLDER` (optional) in the `.env` file.
 
-    > 💡 **Steam Cloud Sync**: If your Steam Cloud is active, using _Option A_ keeps your backups within the game's save directory, ensuring they're automatically synced across devices via [Steam Cloud](https://store.steampowered.com/account/remotestorageapp/?appid=1030300).
+    <p align="center" style="margin: 20px 0;">• • •</p>
+
+    > 💡 **Steam Cloud**
     >
-    > ⚠️ **Steam Cloud Sync Warning**: When using Steam Cloud, always perform backup operations (rename/delete) while the game is running. If you modify backups while the game is closed, Steam may detect "missing" files and may resync these stale files when the game launches.
+    > **Sync**: If your Steam Cloud is active, using _Option A_ keeps your backups within the game's save directory, while ensuring they're automatically synced across devices via [Steam Cloud](https://store.steampowered.com/account/remotestorageapp/?appid=1030300).
     >
-    > ⚠️ **Steam Cloud Storage Consideration**: Steam Cloud provides limited storage space (approximately 100 MB per game). If you plan to maintain a large number of backups (say, 100+), consider using Option B with a custom backup folder to avoid exceeding your Steam Cloud quota.
+    > ⚠️ **Steam Cloud Gotchas**
+    >
+    > **Sync timing**: Always perform backup operations (rename/delete) while the game is running. If you modify backups while the game is closed, Steam may detect "missing" files and resync stale files when the game launches.
+    >
+    > **Storage limits**: Steam Cloud provides limited storage space (approximately 100 MB per game). If you plan to maintain a large number of backups (say, 50+), consider using _Option B_ with a custom backup folder, to avoid exceeding your Steam Cloud quota.
 
 ---
 
 -   **Option B**: Store backups inside a custom folder
 
-    Set the `BACKUP_FOLDER` variable in the `.env` file to your desired backup location. This can be any valid folder path on your system.
+    Set the `BACKUP_FOLDER` variable in the `.env` file to your desired backup location.
 
     ```env
     # .env configuration for Option B
@@ -101,7 +107,11 @@ Whether using the executable or running from source, customize your backup strat
     BACKUP_FOLDER="C:\Users\YourUserName\Documents\Silksong Save Backups"
     ```
 
-    > 💡 **Tip**: You can set `BACKUP_FOLDER` using a relative path. Paths are resolved relative to the executable location (or project root if running from source).
+    <p align="center" style="margin: 20px 0;">• • •</p>
+
+    > 💡 **Tip**
+    >
+    > You can set `BACKUP_FOLDER` using a relative path. Paths are resolved relative to the executable location (or project root if running from source).
     >
     > ```env
     > # BACKUP_FOLDER using a relative path
