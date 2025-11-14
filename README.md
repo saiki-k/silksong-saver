@@ -6,8 +6,6 @@ A simple, local tool for managing **Hollow Knight: Silksong** (Steam) save backu
 
 While the game provides only four save slots, this tool lets you create unlimited named backups for experimentation, testing different routes, or preserving specific moments you want to revisit.
 
-I haven't tested it, but this should work with **Hollow Knight** saves as well.
-
 ![Screenshot](./screenshot.png)
 
 ## ✨ Features
