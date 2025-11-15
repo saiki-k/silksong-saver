@@ -22,7 +22,7 @@ You can either use the pre-built standalone executable or run the project from s
 
 ### Use the standalone executable (Recommended)
 
-1. **Download and extract** the zip file, for your OS, from the [latest release](../../releases/latest)
+1. **Download and extract** the `silksong-saver` zip file, for your OS, from the [latest release](../../releases/latest)
 
 2. **Set up configuration (for save files' folder detection)**:
 
