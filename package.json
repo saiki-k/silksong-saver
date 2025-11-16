@@ -6,7 +6,8 @@
 	"scripts": {
 		"start": "node src/server/index.js",
 		"dev": "node --watch src/server/index.js",
-		"build": "node src/build.js"
+		"build": "node src/build",
+		"release": "node src/build/release.js"
 	},
 	"engines": {
 		"node": ">=20.6.0"

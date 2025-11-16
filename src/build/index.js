@@ -4,11 +4,12 @@ const path = require('path');
 const pngToIco = require('png-to-ico');
 const ResEdit = require('resedit');
 const AdmZip = require('adm-zip');
+const { version } = require('../../package.json');
 
 async function build() {
 	console.log('Building single executable application...\n');
 
-	const buildDir = path.join(__dirname, '..', 'build');
+	const buildDir = path.join(__dirname, '..', '..', 'dist');
 	fs.mkdirSync(buildDir, { recursive: true });
 
 	const outputExePath = path.join(buildDir, 'silksong-saver.exe');
@@ -16,11 +17,8 @@ async function build() {
 	const bundledPath = path.join(buildDir, 'bundled.js');
 	const seaConfigPath = path.join(buildDir, 'sea-config.json');
 
-	const packageJson = require('../package.json');
-	const version = packageJson.version;
-
 	console.log('\n1. Bundling application with dependencies using ncc...');
-	execSync(`npx ncc build src/server/index.js -o build/ncc-output`, { stdio: 'inherit' });
+	execSync(`npx ncc build src/server/index.js -o dist/ncc-output`, { stdio: 'inherit' });
 
 	fs.copyFileSync(path.join(buildDir, 'ncc-output', 'index.js'), bundledPath);
 
@@ -55,7 +53,7 @@ async function build() {
 	);
 
 	console.log('\n5. Setting executable icon and metadata...');
-	const pngPath = path.join(__dirname, 'client', 'assets', 'garmond.png');
+	const pngPath = path.join(__dirname, '..', 'client', 'assets', 'garmond.png');
 	const iconPath = path.join(buildDir, 'icon.ico');
 
 	if (fs.existsSync(pngPath)) {
@@ -110,11 +108,11 @@ async function build() {
 
 			console.log('✓ Icon and metadata set successfully');
 		} catch (err) {
-			console.warn('⚠ Failed to set icon:', err.message);
+			console.warn('⚠  Failed to set icon:', err.message);
 			console.warn('Continuing without icon...');
 		}
 	} else {
-		console.warn('⚠ garmond.png not found, skipping icon setup');
+		console.warn('⚠  garmond.png not found, skipping icon setup');
 	}
 
 	console.log('\n6. Creating distribution package (zip archive)...');
@@ -137,7 +135,7 @@ async function build() {
 	const distExePath = path.join(distDir, `silksong-saver${extension}`);
 	fs.copyFileSync(outputExePath, distExePath);
 
-	const envExamplePath = path.join(__dirname, '..', '.env.example');
+	const envExamplePath = path.join(__dirname, '../../', '.env.example');
 	const distConfigPath = path.join(distDir, 'config');
 	fs.copyFileSync(envExamplePath, distConfigPath);
 
