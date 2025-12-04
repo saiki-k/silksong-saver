@@ -35,7 +35,12 @@ async function handleBackupFormSubmit(event) {
 async function handleRestoreBackup(fullBackupName, slot, event) {
 	const confirmMessage = `Are you sure you want to restore this backup?\n\nThis will overwrite your current Slot ${slot} save files.\n\nYou must exit and restart the game for changes to take effect.`;
 
-	if (!confirm(confirmMessage)) {
+	const confirmed = await showConfirm(confirmMessage, {
+		titleText: 'Confirm Restore',
+		confirmButtonText: 'Restore',
+		confirmButtonClass: 'modal-btn-restore',
+	});
+	if (!confirmed) {
 		return;
 	}
 
@@ -61,7 +66,15 @@ async function handleRestoreBackup(fullBackupName, slot, event) {
  * @param {Event} event - Click event
  */
 async function handleRenameBackup(fullBackupName, event) {
-	const newName = prompt('Enter a new name for this backup');
+	const card = event.target.closest('.backup-card');
+	const currentName = card.querySelector('.backup-name').textContent;
+
+	const newName = await showPrompt('Edit the name of this backup', {
+		titleText: 'Rename Backup',
+		confirmButtonText: 'Rename',
+		confirmButtonClass: 'modal-btn-rename',
+		initialValue: currentName,
+	});
 
 	if (!newName || !newName.trim()) {
 		return;
@@ -101,7 +114,12 @@ async function handleRenameBackup(fullBackupName, event) {
 async function handleDeleteBackup(fullBackupName, event) {
 	const confirmMessage = `Are you sure you want to delete this backup?\n\nThis action cannot be undone.`;
 
-	if (!confirm(confirmMessage)) {
+	const confirmed = await showConfirm(confirmMessage, {
+		titleText: 'Confirm Delete',
+		confirmButtonText: 'Delete',
+		confirmButtonClass: 'modal-btn-delete',
+	});
+	if (!confirmed) {
 		return;
 	}
 
