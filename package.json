@@ -1,6 +1,6 @@
 {
 	"name": "silksong-saver",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "A simple server for managing Hollow Knight: Silksong save backups",
 	"main": "src/server/index.js",
 	"scripts": {
