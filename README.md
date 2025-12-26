@@ -131,5 +131,5 @@ The executable will be created in the `build/` directory. Requires Node.js v20.6
 -   Run the executable (or `npm start` if running from source) before starting the game
 -   Access via Steam's in-game web browser (Shift+Tab → Web Browser), or any web browser at `http://localhost:3000`
 -   Create backups as needed during gameplay, after sitting at a bench
--   **Restore/Replace a backup**: Select a backup and restore it to the same slot, or replace the backup in another slot (both of which replaces the corresponding save file(s))
+-   **Restore/Replace a backup**: Select a backup and restore it to the same slot, or replace the backup in another slot (both of which replace the corresponding save file(s))
     > 📝 After restoring/replacing a backup, you must exit and restart the game for changes to take effect
