@@ -1,6 +1,6 @@
 # 🤹‍♀️ Silksong Saver · Manage Unlimited Save Backups
 
-[Download](../../releases) • [Report Bugs](../../issues)
+[Download](../../releases) · [Report Bugs](../../issues)
 
 A simple, local tool for managing **Hollow Knight: Silksong** (Steam) save backups. Access it locally (http://localhost:3000) from Steam's in-game browser or any browser.
 
@@ -13,7 +13,7 @@ While the game provides only four save slots, this tool lets you create unlimite
 -   **Automatic save folder detection** based on your OS (Windows, macOS, Linux)
 -   **Create backups** with custom names for each save slot
 -   **View all backups** with timestamps and slot information
--   **Rename / Restore / Delete backups** directly from the displayed backup list
+-   **Rename / Restore (to the same slot) / Replace (in another slot) / Delete backups** directly from the displayed backup list
 -   **Configuration display** with current (source and backup) folder paths
 
 ## 🚀 Quick Setup
@@ -81,7 +81,7 @@ Whether using the executable or running from source, customize your backup strat
 
     To customize the backup folder names within the game's save folder, you can set `RELATIVE_BACKUP_FOLDER` and `RELATIVE_BACKUP_SUBFOLDER` (optional) in the configuration file.
 
-    <p align="center" style="margin: 20px 0;">• • •</p>
+    <p align="center" style="margin: 20px 0;">· · ·</p>
 
     > 💡 **Steam Cloud**
     >
@@ -105,7 +105,7 @@ Whether using the executable or running from source, customize your backup strat
     BACKUP_FOLDER="C:\Users\YourUserName\Documents\Silksong Save Backups"
     ```
 
-    <p align="center" style="margin: 20px 0;">• • •</p>
+    <p align="center" style="margin: 20px 0;">· · ·</p>
 
     > 💡 **Tip**
     >
@@ -131,5 +131,5 @@ The executable will be created in the `build/` directory. Requires Node.js v20.6
 -   Run the executable (or `npm start` if running from source) before starting the game
 -   Access via Steam's in-game web browser (Shift+Tab → Web Browser), or any web browser at `http://localhost:3000`
 -   Create backups as needed during gameplay, after sitting at a bench
--   **Restore a backup**: Select a backup and restore it (replaces the current save file)
-    > 📝 After restoring a backup, you must exit and restart the game for changes to take effect
+-   **Restore/Replace a backup**: Select a backup and restore it to the same slot, or replace the backup in another slot (both of which replaces the corresponding save file(s))
+    > 📝 After restoring/replacing a backup, you must exit and restart the game for changes to take effect
