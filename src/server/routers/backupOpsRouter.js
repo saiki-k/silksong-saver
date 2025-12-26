@@ -49,8 +49,8 @@ function createBackupOpsRouter({ backupOpsService, config }) {
 
 	router.post('/restore-backup', async (req, res) => {
 		try {
-			const { folderName, saveSlot } = req.body;
-			const result = await backupOpsService.restoreBackup(folderName, saveSlot);
+			const { fullBackupName, saveSlot } = req.body;
+			const result = await backupOpsService.restoreBackup(fullBackupName, saveSlot);
 			res.json(result);
 		} catch (error) {
 			console.error('Error restoring backup:', error);
@@ -72,10 +72,37 @@ function createBackupOpsRouter({ backupOpsService, config }) {
 		}
 	});
 
+	router.post('/replace-backup', async (req, res) => {
+		try {
+			const { fullBackupName, backupSlot, targetSlot } = req.body;
+			const result = await backupOpsService.replaceBackup(fullBackupName, backupSlot, targetSlot);
+			res.json(result);
+		} catch (error) {
+			console.error('Error replacing backup:', error);
+
+			let statusCode = 500;
+			switch (true) {
+				case error.message === 'Invalid target save slot provided':
+				case error.message === 'Invalid backup slot provided':
+				case error.message === 'Target slot cannot be the same as the backup slot':
+				case error.message === 'Invalid backup folder name provided':
+					statusCode = 400;
+					break;
+				case error.message === 'Backup folder not found':
+					statusCode = 404;
+					break;
+				default:
+					statusCode = 500;
+			}
+
+			res.status(statusCode).json({ error: error.message });
+		}
+	});
+
 	router.put('/rename-backup', async (req, res) => {
 		try {
-			const { folderName, newName } = req.body;
-			const result = await backupOpsService.renameBackup(folderName, newName);
+			const { fullBackupName, newName } = req.body;
+			const result = await backupOpsService.renameBackup(fullBackupName, newName);
 			res.json(result);
 		} catch (error) {
 			console.error('Error renaming backup:', error);
@@ -99,8 +126,8 @@ function createBackupOpsRouter({ backupOpsService, config }) {
 
 	router.delete('/delete-backup', async (req, res) => {
 		try {
-			const { folderName } = req.body;
-			const result = await backupOpsService.deleteBackup(folderName);
+			const { fullBackupName } = req.body;
+			const result = await backupOpsService.deleteBackup(fullBackupName);
 			res.json(result);
 		} catch (error) {
 			console.error('Error deleting backup:', error);

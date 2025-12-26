@@ -140,6 +140,89 @@ function showPrompt(message, options = {}) {
 }
 
 /**
+ * Show a custom rich prompt dialog with custom HTML content
+ * @param {string} message - The prompt message to display
+ * @param {string} contentHTML - Custom HTML content for the modal body
+ * @param {object} options - Optional settings for the dialog
+ * @param {string} options.titleText - Title text for the modal
+ * @param {string} options.confirmButtonText - Text for the confirm button
+ * @param {string} options.confirmButtonClass - CSS class for the confirm button
+ * @param {string} options.cancelButtonText - Text for the cancel button
+ * @returns {Promise<string|null>} - Promise that resolves to the value of the first input/select element or null if cancelled
+ */
+function showRichPrompt(message, contentHTML, options = {}) {
+	return new Promise((resolve) => {
+		const modal = document.getElementById('customModal');
+		const title = document.getElementById('modalTitle');
+		const body = document.getElementById('modalBody');
+		const confirmBtn = document.getElementById('modalConfirm');
+		const cancelBtn = document.getElementById('modalCancel');
+		const inputField = document.getElementById('modalInput');
+
+		const {
+			titleText = 'Prompt',
+			confirmButtonText = 'OK',
+			confirmButtonClass = 'modal-btn-primary',
+			cancelButtonText = 'Cancel',
+		} = options;
+
+		title.textContent = titleText;
+		const messagePara = message ? `<p>${message}</p>` : '';
+		body.innerHTML = `${messagePara}${contentHTML}`;
+		inputField.style.display = 'none';
+		confirmBtn.textContent = confirmButtonText;
+		confirmBtn.className = `modal-btn ${confirmButtonClass}`;
+		cancelBtn.textContent = cancelButtonText;
+		cancelBtn.style.display = 'inline-block';
+
+		modal.classList.add('modal-active');
+
+		const handleConfirm = () => {
+			const select = body.querySelector('select');
+			const input = body.querySelector('input');
+			let value = null;
+			if (select) {
+				value = select.value;
+			} else if (input) {
+				value = input.value.trim();
+			}
+			cleanup();
+			resolve(value || null);
+		};
+
+		const handleCancel = () => {
+			cleanup();
+			resolve(null);
+		};
+
+		const handleEscape = (e) => {
+			if (e.key === 'Escape') {
+				handleCancel();
+			}
+		};
+
+		const cleanup = () => {
+			modal.classList.remove('modal-active');
+			body.innerHTML = '';
+			confirmBtn.removeEventListener('click', handleConfirm);
+			cancelBtn.removeEventListener('click', handleCancel);
+			document.removeEventListener('keydown', handleEscape);
+		};
+
+		confirmBtn.addEventListener('click', handleConfirm);
+		cancelBtn.addEventListener('click', handleCancel);
+		document.addEventListener('keydown', handleEscape);
+
+		setTimeout(() => {
+			const select = body.querySelector('select');
+			const input = body.querySelector('input');
+			if (select) select.focus();
+			else if (input) input.focus();
+		}, 100);
+	});
+}
+
+/**
  * Show a custom alert dialog
  * @param {string} message - The alert message to display
  * @param {object} options - Optional settings for the dialog

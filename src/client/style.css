@@ -246,6 +246,7 @@ button:hover {
 
 .rename-btn,
 .restore-btn,
+.replace-btn,
 .delete-btn {
 	color: white;
 	border: none;
@@ -270,12 +271,17 @@ button:hover {
 	background: #ff6b35;
 }
 
+.replace-btn {
+	background: #9c27b0;
+}
+
 .delete-btn {
 	background: #d32f2f;
 }
 
 .backup-card:hover .rename-btn,
 .backup-card:hover .restore-btn,
+.backup-card:hover .replace-btn,
 .backup-card:hover .delete-btn {
 	opacity: 1;
 	visibility: visible;
@@ -289,12 +295,17 @@ button:hover {
 	background: #ff5722;
 }
 
+.replace-btn:hover:not(:disabled) {
+	background: #7b1fa2;
+}
+
 .delete-btn:hover:not(:disabled) {
 	background: #b71c1c;
 }
 
 .rename-btn:disabled,
 .restore-btn:disabled,
+.replace-btn:disabled,
 .delete-btn:disabled {
 	background: #666;
 	cursor: not-allowed;
@@ -410,7 +421,7 @@ button:hover {
 }
 
 .modal-body {
-	margin: 0 0 16px 0;
+	margin: 0;
 	color: #e0e0e0;
 	line-height: 1.6;
 	white-space: pre-line;
@@ -431,6 +442,24 @@ button:hover {
 }
 
 .modal-input:focus {
+	outline: none;
+	border-color: #66bb6a;
+}
+
+.modal-select {
+	width: 100%;
+	padding: 10px 12px;
+	border: 2px solid #555;
+	border-radius: 4px;
+	font-size: 14px;
+	box-sizing: border-box;
+	background-color: #3a3a3a;
+	color: #ffffff;
+	margin-top: 8px;
+	display: none;
+}
+
+.modal-select:focus {
 	outline: none;
 	border-color: #66bb6a;
 }
@@ -513,6 +542,15 @@ button:hover {
 
 .modal-btn-delete:hover {
 	background-color: #b71c1c;
+}
+
+.modal-btn-replace {
+	background-color: #9c27b0;
+	color: #ffffff;
+}
+
+.modal-btn-replace:hover {
+	background-color: #7b1fa2;
 }
 
 @keyframes fadeIn {
