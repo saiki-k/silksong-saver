@@ -130,7 +130,7 @@ class BackupOpsService {
 		await this.metaService.saveMeta(meta);
 
 		// Build response message
-		let message = `✅ Successfully created the backup "${finalBackupName}!"`;
+		let message = `✅ Successfully created the backup "${finalBackupName}"!`;
 		if (copyResults.length > 0) {
 			message += `\nCopied: ${copyResults.join(', ')}`;
 		}
